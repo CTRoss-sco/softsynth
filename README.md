@@ -5,7 +5,10 @@ A cross-platform synthesizer application built with Flutter UI and JUCE audio pr
 ## Architecture
 
 ```
-Flutter UI (Dart) ↔ FFI Bridge (C) ↔ JUCE Audio Engine (C++)
+Flutter UI (Dart) Frontend UI
+FFI file (C) Bridge layer between UI and Audio Processing layer
+JUCE Audio Engine (C++) Backend for processing audio
+TBA Google Firestore (cloud based account management and preset storage)
 ```
 
 ## Project Structure
