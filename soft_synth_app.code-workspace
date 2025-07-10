@@ -1,0 +1,69 @@
+{
+  "folders": [
+    {
+      "path": "flutter_ui"
+    },
+    {
+      "path": "juce_audio_engine"
+    },
+    {
+      "path": "ffi_bridge"
+    }
+  ],
+  "settings": {
+    "cmake.sourceDirectory": "${workspaceFolder:juce_audio_engine}",
+    "files.associations": {
+      "*.h": "cpp",
+      "*.cpp": "cpp",
+      "*.dart": "dart"
+    },
+    "dart.flutterSdkPath": "/your/flutter/sdk/path",
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter: Launch UI",
+        "type": "dart",
+        "request": "launch",
+        "program": "flutter_ui/lib/main.dart"
+      },
+      {
+        "name": "JUCE: Launch Audio Engine (Debug)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder:juce_audio_engine}/build/yourSynthApp",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder:juce_audio_engine}/build",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build JUCE Audio Engine",
+        "type": "shell",
+        "command": "cmake",
+        "args": [
+          "--build",
+          "${workspaceFolder:juce_audio_engine}/build"
+        ],
+        "group": "build",
+        "problemMatcher": []
+      }
+    ]
+  }
+}

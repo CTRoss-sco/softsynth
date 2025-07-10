@@ -1,0 +1,64 @@
+# Build directories
+build/
+Debug/
+Release/
+x64/
+
+# Visual Studio files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+*.cmake
+
+# JUCE generated files
+JuceLibraryCode/
+Builds/
+
+# Flutter build files
+flutter_ui/build/
+flutter_ui/.dart_tool/
+flutter_ui/.packages
+flutter_ui/pubspec.lock
+
+# Git submodules (JUCE will be re-downloaded)
+juce_audio_engine/JUCE/
+juce_audio_engine/.gitmodules
+**/.git/
+
+# IDE files
+.vscode/
+.vs/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.exp
+
+# Temporary files
+*.tmp
+*.temp
