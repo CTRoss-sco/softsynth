@@ -19,6 +19,7 @@ typedef struct SynthEngineHandle SynthEngineHandle;
 
 // Create/destroy synth engine
 SYNTHFFI_API SynthEngineHandle* synth_create();
+SYNTHFFI_API int synth_initialize_audio(SynthEngineHandle* handle);
 SYNTHFFI_API void synth_destroy(SynthEngineHandle* handle);
 
 // Basic synth controls
