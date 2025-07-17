@@ -23,17 +23,6 @@ install_manifest.txt
 JuceLibraryCode/
 Builds/
 
-# Flutter build files
-flutter_ui/build/
-flutter_ui/.dart_tool/
-flutter_ui/.packages
-flutter_ui/pubspec.lock
-
-# Git submodules (JUCE will be re-downloaded)
-juce_audio_engine/JUCE/
-juce_audio_engine/.gitmodules
-**/.git/
-
 # IDE files
 .vscode/
 .vs/

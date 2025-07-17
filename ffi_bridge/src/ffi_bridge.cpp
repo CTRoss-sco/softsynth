@@ -14,6 +14,13 @@ SynthEngineHandle* synth_create() {
     return handle;
 }
 
+int synth_initialize_audio(SynthEngineHandle* handle) {
+    if (handle && handle->engine) {
+        return handle->engine->initializeAudio() ? 1 : 0;
+    }
+    return 0;
+}
+
 void synth_destroy(SynthEngineHandle* handle) {
     delete handle;
 }
@@ -26,13 +33,13 @@ void synth_set_cutoff(SynthEngineHandle* handle, float value) {
 
 void synth_note_on(SynthEngineHandle* handle, int note, float velocity) {
     if (handle && handle->engine) {
-        // TODO: Implement note on functionality
+        handle->engine->noteOn(note, velocity);
     }
 }
 
 void synth_note_off(SynthEngineHandle* handle, int note) {
     if (handle && handle->engine) {
-        // TODO: Implement note off functionality
+        handle->engine->noteOff(note);
     }
 }
 

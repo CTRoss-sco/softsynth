@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.15)
+project(TestFFI)
+
+# Build test FFI library
+add_library(TestFFI SHARED
+    src/test_ffi.cpp
+)
+
+# Set up exports
+target_compile_definitions(TestFFI PRIVATE BUILDING_SYNTHFFI_DLL=1)
+
+# Set output directory
+set_target_properties(TestFFI PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug
+)
