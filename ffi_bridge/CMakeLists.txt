@@ -14,8 +14,13 @@ add_library(SynthFFI SHARED
     src/ffi_bridge.h
 )
 
-# Link with the SynthEngine
-target_link_libraries(SynthFFI PRIVATE SynthEngine)
+# Link with the SynthEngine and JUCE modules
+target_link_libraries(SynthFFI PRIVATE 
+    SynthEngine
+    juce::juce_audio_basics
+    juce::juce_audio_devices
+    juce::juce_core
+)
 
 # Define export symbols
 target_compile_definitions(SynthFFI PRIVATE BUILDING_SYNTHFFI_DLL=1)
