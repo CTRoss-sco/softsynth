@@ -1,0 +1,3 @@
+[submodule "juce_audio_engine/JUCE"]
+	path = juce_audio_engine/JUCE
+	url = https://github.com/juce-framework/JUCE.git
