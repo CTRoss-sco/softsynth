@@ -22,7 +22,22 @@ class SynthEngine {
     try {
       // Load the DLL
       if (Platform.isWindows) {
-        _library = DynamicLibrary.open('./SynthFFI.dll');
+        try {
+          // Try current directory first
+          _library = DynamicLibrary.open('./SynthFFI.dll');
+        } catch (e) {
+          try {
+            // Try without path prefix
+            _library = DynamicLibrary.open('SynthFFI.dll');
+          } catch (e) {
+            try {
+              // Try in the build directory where we copied it
+              _library = DynamicLibrary.open('build/windows/x64/runner/Debug/SynthFFI.dll');
+            } catch (e) {
+              throw Exception('Could not find SynthFFI.dll in any expected location');
+            }
+          }
+        }
       } else {
         throw UnsupportedError('Platform not supported yet');
       }
