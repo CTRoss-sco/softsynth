@@ -4,7 +4,7 @@ import 'dart:io';
 // FFI bindings for the SynthFFI library
 class SynthEngine {
   static late DynamicLibrary _library;
-  static late Pointer<Void> _synthHandle;
+  static late Pointer<Void> _synthInstance;
   
   // Dart function wrappers
   static late Pointer<Void> Function() _synthCreate;
@@ -68,13 +68,13 @@ class SynthEngine {
           .asFunction<void Function(Pointer<Void>, int)>();
 
       // Create synth instance
-      _synthHandle = _synthCreate();
+      _synthInstance = _synthCreate();
       
       // Initialize audio
-      final audioResult = _synthInitializeAudio(_synthHandle);
+      final audioResult = _synthInitializeAudio(_synthInstance);
       if (audioResult == 0) {
         print('Failed to initialize audio system');
-        _synthDestroy(_synthHandle);
+        _synthDestroy(_synthInstance);
         return false;
       }
       
@@ -88,8 +88,8 @@ class SynthEngine {
   }
 
   static void cleanup() {
-    if (_initialized && _synthHandle != nullptr) {
-      _synthDestroy(_synthHandle);
+    if (_initialized && _synthInstance != nullptr) {
+      _synthDestroy(_synthInstance);
       _initialized = false;
       print('SynthEngine cleaned up');
     }
@@ -100,7 +100,7 @@ class SynthEngine {
       print('SynthEngine not initialized');
       return;
     }
-    _synthNoteOn(_synthHandle, midiNote, velocity);
+    _synthNoteOn(_synthInstance, midiNote, velocity);
     print('FFI: Note ON - MIDI: $midiNote, Velocity: $velocity');
   }
 
@@ -109,7 +109,7 @@ class SynthEngine {
       print('SynthEngine not initialized');
       return;
     }
-    _synthNoteOff(_synthHandle, midiNote);
+    _synthNoteOff(_synthInstance, midiNote);
     print('FFI: Note OFF - MIDI: $midiNote');
   }
 
@@ -118,7 +118,12 @@ class SynthEngine {
       print('SynthEngine not initialized');
       return;
     }
-    _synthSetCutoff(_synthHandle, cutoff);
+    _synthSetCutoff(_synthInstance, cutoff);
     print('FFI: Cutoff set to $cutoff');
   }
+
+  // Add these getters for OscillatorControls to access
+  static DynamicLibrary get library => _library;
+  static Pointer<Void> get synthHandle => _synthInstance;
+  static bool get isInitialized => _initialized;
 }

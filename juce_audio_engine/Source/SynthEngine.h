@@ -4,6 +4,7 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_core/juce_core.h>
 #include <map>
+#include "Oscillator.h"  // Include our new oscillator system
 
 #ifdef _WIN32
     #ifdef JUCE_DLL_BUILD
@@ -26,22 +27,27 @@ public:
     void noteOn(int midiNote, float velocity);
     void noteOff(int midiNote);
     
+    // New dual oscillator controls
+    void setOsc1Waveform(WaveformType type);
+    void setOsc2Waveform(WaveformType type);
+    void setDetune(float cents);
+    void setOscMix(float mix);
+    
     // AudioSource overrides
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
 private:
-    struct Voice {
-        float frequency;
-        float phase;
-        float velocity;
-        bool isActive;
-        
-        Voice() : frequency(0.0f), phase(0.0f), velocity(0.0f), isActive(false) {}
-    };
+    // Replace simple Voice with DualOscVoice
+    std::map<int, DualOscVoice> activeVoices;
     
-    std::map<int, Voice> activeVoices;
+    // Global oscillator parameters (applied to new voices)
+    WaveformType globalOsc1Waveform;
+    WaveformType globalOsc2Waveform;
+    float globalDetune;
+    float globalMix;
+    
     float cutoffFrequency;
     double currentSampleRate;
     

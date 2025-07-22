@@ -6,8 +6,11 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-SynthEngine::SynthEngine() : cutoffFrequency(1000.0f), currentSampleRate(44100.0) {
-    std::cout << "SynthEngine created" << std::endl;
+SynthEngine::SynthEngine() 
+    : cutoffFrequency(1000.0f), currentSampleRate(44100.0),
+      globalOsc1Waveform(WaveformType::SINE), globalOsc2Waveform(WaveformType::SINE),
+      globalDetune(0.0f), globalMix(0.5f) {
+    std::cout << "SynthEngine created with dual oscillators" << std::endl;
 }
 
 SynthEngine::~SynthEngine() {
@@ -45,78 +48,148 @@ void SynthEngine::shutdownAudio() {
     audioDeviceManager.removeAudioCallback(&audioSourcePlayer);
     audioSourcePlayer.setSource(nullptr);
     audioDeviceManager.closeAudioDevice();
-    std::cout << "Audio shutdown" << std::endl;
 }
 
 void SynthEngine::setCutoff(float value) {
     cutoffFrequency = value;
-    std::cout << "Setting cutoff to " << value << std::endl;
 }
 
 void SynthEngine::noteOn(int midiNote, float velocity) {
-    Voice& voice = activeVoices[midiNote];
-    voice.frequency = midiNoteToFrequency(midiNote);
-    voice.velocity = velocity;
-    voice.phase = 0.0f;
-    voice.isActive = true;
+    float frequency = midiNoteToFrequency(midiNote);
     
-    std::cout << "Note ON: " << midiNote << " (" << voice.frequency << " Hz) - Velocity: " << velocity << std::endl;
+    // Create or reuse voice
+    DualOscVoice& voice = activeVoices[midiNote];
+    
+    // Apply current global settings to the voice
+    voice.setOsc1Waveform(globalOsc1Waveform);
+    voice.setOsc2Waveform(globalOsc2Waveform);
+    voice.setDetune(globalDetune);
+    voice.setMix(globalMix);
+    
+    // Start the note
+    voice.noteOn(frequency, velocity);
+    
+    std::cout << "Note ON: " << midiNote << " (freq: " << frequency << "Hz)" << std::endl;
 }
 
 void SynthEngine::noteOff(int midiNote) {
     auto it = activeVoices.find(midiNote);
     if (it != activeVoices.end()) {
-        it->second.isActive = false;
-        activeVoices.erase(it);
+        it->second.noteOff();
+        std::cout << "Note OFF: " << midiNote << std::endl;
     }
-    
-    std::cout << "Note OFF: " << midiNote << std::endl;
 }
 
+// New dual oscillator controls
+void SynthEngine::setOsc1Waveform(WaveformType type) {
+    globalOsc1Waveform = type;
+    // Apply to all active voices
+    for (auto& voice : activeVoices) {
+        voice.second.setOsc1Waveform(type);
+    }
+}
+
+void SynthEngine::setOsc2Waveform(WaveformType type) {
+    globalOsc2Waveform = type;
+    // Apply to all active voices
+    for (auto& voice : activeVoices) {
+        voice.second.setOsc2Waveform(type);
+    }
+}
+
+void SynthEngine::setDetune(float cents) {
+    globalDetune = cents;
+    // Apply to all active voices
+    for (auto& voice : activeVoices) {
+        voice.second.setDetune(cents);
+    }
+}
+
+void SynthEngine::setOscMix(float mix) {
+    globalMix = mix;
+    // Apply to all active voices
+    for (auto& voice : activeVoices) {
+        voice.second.setMix(mix);
+    }
+}
+
+// AudioSource overrides
 void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
     currentSampleRate = sampleRate;
-    std::cout << "Audio prepared: " << sampleRate << " Hz, " << samplesPerBlockExpected << " samples per block" << std::endl;
+    std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;
 }
 
 void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
+    // Clear the buffer first
     bufferToFill.clearActiveBufferRegion();
     
-    auto* leftChannel = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-    auto* rightChannel = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+    // Get buffer details
+    int numSamples = bufferToFill.numSamples;
+    int numChannels = bufferToFill.buffer->getNumChannels();
     
-    for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
+    // Count active voices for gain compensation
+    int activeVoiceCount = 0;
+    for (auto& voicePair : activeVoices) {
+        if (voicePair.second.isActive()) {
+            activeVoiceCount++;
+        }
+    }
+    
+    // Skip processing if no active voices
+    if (activeVoiceCount == 0) return;
+    
+    // Calculate polyphonic gain compensation
+    float polyGain = 1.0f / std::sqrt(static_cast<float>(activeVoiceCount));
+    float masterGain = 0.4f; // Overall volume reduction
+    float totalGain = polyGain * masterGain;
+    
+    // Generate audio for each sample
+    for (int sample = 0; sample < numSamples; ++sample) {
         float mixedSample = 0.0f;
         
-        // Generate audio for each active voice
+        // Sum all active voices
         for (auto& voicePair : activeVoices) {
-            Voice& voice = voicePair.second;
-            if (voice.isActive) {
-                // Simple sine wave synthesis
-                float sine = std::sin(voice.phase) * voice.velocity * 0.3f;
-                mixedSample += sine;
-                
-                // Update phase
-                voice.phase += (voice.frequency * 2.0f * M_PI) / currentSampleRate;
-                if (voice.phase >= 2.0f * M_PI) {
-                    voice.phase -= 2.0f * M_PI;
-                }
+            DualOscVoice& voice = voicePair.second;
+            if (voice.isActive()) {
+                mixedSample += voice.generateSample(currentSampleRate);
             }
         }
         
-        // Apply simple limiting
-        mixedSample = juce::jlimit(-1.0f, 1.0f, mixedSample);
+        // Apply polyphonic gain compensation
+        mixedSample *= totalGain;
         
-        leftChannel[sample] = mixedSample;
-        rightChannel[sample] = mixedSample;
+        // Soft limiter to prevent harsh clipping
+        if (mixedSample > 0.95f) {
+            mixedSample = 0.95f + 0.05f * std::tanh((mixedSample - 0.95f) / 0.05f);
+        } else if (mixedSample < -0.95f) {
+            mixedSample = -0.95f + 0.05f * std::tanh((mixedSample + 0.95f) / 0.05f);
+        }
+        
+        // Write to all output channels
+        for (int channel = 0; channel < numChannels; ++channel) {
+            bufferToFill.buffer->addSample(channel, bufferToFill.startSample + sample, mixedSample);
+        }
+    }
+    
+    // Clean up inactive voices
+    auto it = activeVoices.begin();
+    while (it != activeVoices.end()) {
+        if (!it->second.isActive()) {
+            it = activeVoices.erase(it);
+        } else {
+            ++it;
+        }
     }
 }
 
 void SynthEngine::releaseResources() {
+    // Clear all voices when audio stops
     activeVoices.clear();
     std::cout << "Audio resources released" << std::endl;
 }
 
 float SynthEngine::midiNoteToFrequency(int midiNote) {
-    // Convert MIDI note to frequency: f = 440 * 2^((n-69)/12)
+    // A4 (MIDI note 69) = 440 Hz
+    // Each semitone = 2^(1/12) frequency ratio
     return 440.0f * std::pow(2.0f, (midiNote - 69) / 12.0f);
 }

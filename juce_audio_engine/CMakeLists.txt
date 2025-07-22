@@ -8,10 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add JUCE
 add_subdirectory(JUCE)
 
-# For now, create a library instead of executable for FFI compatibility
+# Create a library instead of executable for FFI compatibility
 add_library(SynthEngine SHARED
     Source/SynthEngine.cpp
     Source/SynthEngine.h
+    Source/Oscillator.cpp
+    Source/Oscillator.h
 )
 
 # Link JUCE modules to your SynthEngine

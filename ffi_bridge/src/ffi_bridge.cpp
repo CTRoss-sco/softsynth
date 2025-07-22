@@ -1,5 +1,6 @@
 #include "ffi_bridge.h"
 #include "../../juce_audio_engine/Source/SynthEngine.h"
+#include "../../juce_audio_engine/Source/Oscillator.h"  // Add this line
 #include <memory>
 
 struct SynthEngineHandle {
@@ -46,6 +47,31 @@ void synth_note_off(SynthEngineHandle* handle, int note) {
 void synth_process_audio(SynthEngineHandle* handle, float* buffer, int frames) {
     if (handle && handle->engine) {
         // TODO: Implement audio processing
+    }
+}
+
+// New dual oscillator control functions
+void synth_set_osc1_waveform(SynthEngineHandle* handle, int waveform) {
+    if (handle && handle->engine) {
+        handle->engine->setOsc1Waveform(static_cast<WaveformType>(waveform));
+    }
+}
+
+void synth_set_osc2_waveform(SynthEngineHandle* handle, int waveform) {
+    if (handle && handle->engine) {
+        handle->engine->setOsc2Waveform(static_cast<WaveformType>(waveform));
+    }
+}
+
+void synth_set_detune(SynthEngineHandle* handle, float cents) {
+    if (handle && handle->engine) {
+        handle->engine->setDetune(cents);
+    }
+}
+
+void synth_set_osc_mix(SynthEngineHandle* handle, float mix) {
+    if (handle && handle->engine) {
+        handle->engine->setOscMix(mix);
     }
 }
 

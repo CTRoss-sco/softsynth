@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'synth_engine.dart';
+import 'oscillator_controls.dart'; // Add this import
 
 void main() {
   runApp(const SynthApp());
@@ -78,9 +79,21 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
   }
   
   void _initializeSynth() async {
-    setState(() {
-      synthInitialized = SynthEngine.initialize();
-    });
+    bool success = SynthEngine.initialize();
+    if (success) {
+      // Initialize oscillator controls after SynthEngine
+      bool oscSuccess = OscillatorControls.initialize(SynthEngine.library);
+      if (oscSuccess) {
+        setState(() {
+          synthInitialized = true;
+        });
+        print('SynthEngine and OscillatorControls initialized successfully');
+      } else {
+        print('Failed to initialize OscillatorControls');
+      }
+    } else {
+      print('Failed to initialize SynthEngine');
+    }
   }
   
   void _onNotePressed(int midiNote, double velocity) {
@@ -176,133 +189,79 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
       child: Scaffold(
         backgroundColor: Colors.grey[900],
         appBar: AppBar(
-          title: const Text('Synth App', style: TextStyle(color: Colors.white)),        backgroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          // Top area - Controls (placeholder for now)
-          Expanded(
-            flex: 2,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Synth engine status
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: synthInitialized ? Colors.green[700] : Colors.red[700],
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      synthInitialized ? 'Audio Engine: Connected' : 'Audio Engine: Disconnected',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+          title: const Text('Synth App', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.black,
+          elevation: 0,
+        ),
+        body: Stack(
+          children: [
+            // Oscillator controls in top-left corner
+            if (synthInitialized)
+              const Positioned(
+                top: 16,
+                left: 16,
+                child: OscillatorControlsWidget(),
+              ),
+            
+            // Piano keyboard at bottom
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 200,
+                child: synthInitialized 
+                    ? _buildPianoKeyboard()
+                    : const Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Current Note:',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    currentNote,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  // Keyboard instructions
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Controls',
-                          style: TextStyle(
-                            color: Colors.grey[300],
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Desktop - Keyboard: A S D F G H J K L ;',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          'Desktop - Black keys: W E   T Y U   O P [',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          'Mobile/Tablet: Touch piano keys below',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Octave: ↑↓ arrows  |  Current octave: $_baseOctave',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 12,
-                          ),
-                        ),
-                        Text(
-                          'Tip: Hold keys while changing octave for pedal tones',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 11,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
-          ),
-          
-          // Bottom area - Piano keyboard
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: PianoKeyboard(
-                onNotePressed: _onNotePressed,
-                onNoteReleased: _onNoteReleased,
-                pressedNotes: _pressedMidiNotes,
-                baseOctave: _baseOctave, // Pass the current octave
+            
+            // Status display in top-right corner
+            if (synthInitialized)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[700]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Current Note: $currentNote',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'Octave: $_baseOctave',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const Text(
+                        '↑↓ arrows: Change octave',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-      ),
+    );
+  }
+  
+  Widget _buildPianoKeyboard() {
+    return PianoKeyboard(
+      onNotePressed: _onNotePressed,
+      onNoteReleased: _onNoteReleased,
+      pressedNotes: _pressedMidiNotes,
+      baseOctave: _baseOctave,
     );
   }
 }
