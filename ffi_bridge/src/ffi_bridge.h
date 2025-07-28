@@ -34,6 +34,10 @@ SYNTHFFI_API void synth_set_osc2_waveform(SynthEngineHandle* handle, int wavefor
 SYNTHFFI_API void synth_set_detune(SynthEngineHandle* handle, float cents);
 SYNTHFFI_API void synth_set_osc_mix(SynthEngineHandle* handle, float mix);
 
+// Filter controls
+SYNTHFFI_API void synth_set_filter_cutoff(SynthEngineHandle* handle, float value);
+SYNTHFFI_API void synth_set_filter_resonance(SynthEngineHandle* handle, float value);
+
 #ifdef __cplusplus
 }
 #endif

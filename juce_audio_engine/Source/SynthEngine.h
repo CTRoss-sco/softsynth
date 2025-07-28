@@ -4,7 +4,8 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_core/juce_core.h>
 #include <map>
-#include "Oscillator.h"  // Include our new oscillator system
+#include "Oscillator.h"
+#include "Effects/Filter.h" 
 
 #ifdef _WIN32
     #ifdef JUCE_DLL_BUILD
@@ -24,6 +25,7 @@ public:
     bool initializeAudio();
     void shutdownAudio();
     void setCutoff(float value);
+    void setResonance(float value);
     void noteOn(int midiNote, float velocity);
     void noteOff(int midiNote);
     
@@ -50,6 +52,8 @@ private:
     
     float cutoffFrequency;
     double currentSampleRate;
+
+    std::unique_ptr<LowpassFilter> filter;
     
     // Audio device management
     juce::AudioDeviceManager audioDeviceManager;

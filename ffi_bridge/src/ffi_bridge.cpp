@@ -1,6 +1,6 @@
 #include "ffi_bridge.h"
 #include "../../juce_audio_engine/Source/SynthEngine.h"
-#include "../../juce_audio_engine/Source/Oscillator.h"  // Add this line
+#include "../../juce_audio_engine/Source/Oscillator.h"  
 #include <memory>
 
 struct SynthEngineHandle {
@@ -75,4 +75,15 @@ void synth_set_osc_mix(SynthEngineHandle* handle, float mix) {
     }
 }
 
+void synth_set_filter_cutoff(SynthEngineHandle* handle, float value) {
+    if (handle && handle->engine) {
+        handle->engine->setCutoff(value);
+    }
+}
+
+void synth_set_filter_resonance(SynthEngineHandle* handle, float value) {
+    if (handle && handle->engine) {
+        handle->engine->setResonance(value);
+    }
+}
 }

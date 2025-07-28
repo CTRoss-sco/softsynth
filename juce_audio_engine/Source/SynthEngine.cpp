@@ -10,6 +10,11 @@ SynthEngine::SynthEngine()
     : cutoffFrequency(1000.0f), currentSampleRate(44100.0),
       globalOsc1Waveform(WaveformType::SINE), globalOsc2Waveform(WaveformType::SINE),
       globalDetune(0.0f), globalMix(0.5f) {
+
+    filter = std::make_unique<LowpassFilter>();
+    filter->setSampleRate(44100.0);
+    filter->setCutoff(1000.0f);
+    filter->setResonance(1.0f);
     std::cout << "SynthEngine created with dual oscillators" << std::endl;
 }
 
@@ -52,6 +57,15 @@ void SynthEngine::shutdownAudio() {
 
 void SynthEngine::setCutoff(float value) {
     cutoffFrequency = value;
+    if (filter) {
+        filter->setCutoff(value);
+    }
+}
+
+void SynthEngine::setResonance(float value) {
+    if (filter) {
+        filter->setResonance(value);
+    }
 }
 
 void SynthEngine::noteOn(int midiNote, float velocity) {
@@ -116,6 +130,9 @@ void SynthEngine::setOscMix(float mix) {
 // AudioSource overrides
 void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
     currentSampleRate = sampleRate;
+    if (filter) {
+        filter->setSampleRate(sampleRate);
+    }
     std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;
 }
 
@@ -157,6 +174,11 @@ void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
         
         // Apply polyphonic gain compensation
         mixedSample *= totalGain;
+
+        //any filters applied are processed after gain compensation
+        if (filter) {
+            mixedSample = filter->processSample(mixedSample);
+        }
         
         // Soft limiter to prevent harsh clipping
         if (mixedSample > 0.95f) {

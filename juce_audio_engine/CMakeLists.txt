@@ -14,6 +14,9 @@ add_library(SynthEngine SHARED
     Source/SynthEngine.h
     Source/Oscillator.cpp
     Source/Oscillator.h
+    Source/Effects/Effect.h
+    Source/Effects/Filter.h
+    "${CMAKE_CURRENT_SOURCE_DIR}/Source/Effects/Filter.cpp"
 )
 
 # Link JUCE modules to your SynthEngine
@@ -39,6 +42,9 @@ target_compile_definitions(SynthEngine PRIVATE
 
 # Export symbols for DLL
 target_compile_definitions(SynthEngine PRIVATE JUCE_DLL_BUILD=1)
+
+# Include directories for Effects
+target_include_directories(SynthEngine PRIVATE Source/Effects)
 
 # Temporarily keep the test executable
 add_executable(TestApp Source/Main.cpp)

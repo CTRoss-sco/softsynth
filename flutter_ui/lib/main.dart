@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'synth_engine.dart';
-import 'oscillator_controls.dart'; // Add this import
+import 'oscillator_controls.dart'; 
+import 'effects_controls.dart';
 
 void main() {
   runApp(const SynthApp());
@@ -193,63 +194,116 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
           backgroundColor: Colors.black,
           elevation: 0,
         ),
-        body: Stack(
+        body: Column(
           children: [
-            // Oscillator controls in top-left corner
+            // Top section - 3-column synthesizer layout
             if (synthInitialized)
-              const Positioned(
-                top: 16,
-                left: 16,
-                child: OscillatorControlsWidget(),
-              ),
-            
-            // Piano keyboard at bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 200,
-                child: synthInitialized 
-                    ? _buildPianoKeyboard()
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-              ),
-            ),
-            
-            // Status display in top-right corner
-            if (synthInitialized)
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[700]!),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+              Expanded(
+                flex: 3, // Takes up most of the screen
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                     children: [
-                      Text(
-                        'Current Note: $currentNote',
-                        style: const TextStyle(color: Colors.white),
+                      // Left column - Oscillator controls
+                      Expanded(
+                        flex: 1,
+                        child: const OscillatorControlsWidget(),
                       ),
-                      Text(
-                        'Octave: $_baseOctave',
-                        style: const TextStyle(color: Colors.grey),
+                      
+                      const SizedBox(width: 12),
+                      
+                      // Middle column - Effects rack (NEW!)
+                      Expanded(
+                        flex: 1,
+                        child: const EffectsControls(), // Your new effects widget
                       ),
-                      const Text(
-                        '↑↓ arrows: Change octave',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      
+                      const SizedBox(width: 12),
+                      
+                      // Right column - Future oscilloscope
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[700]!),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.show_chart,
+                                  color: Colors.grey[500],
+                                  size: 48,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'OSCILLOSCOPE',
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Coming Soon',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
+            
+            // Status display (moved to top bar area)
+            if (synthInitialized)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[700]!),
+                    bottom: BorderSide(color: Colors.grey[700]!),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Current Note: $currentNote',
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    Text(
+                      'Octave: $_baseOctave',
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                    const Text(
+                      '↑↓ arrows: Change octave',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            
+            // Piano keyboard at bottom (unchanged)
+            Container(
+              height: 200,
+              child: synthInitialized 
+                  ? _buildPianoKeyboard()
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            ),
           ],
         ),
       ),
