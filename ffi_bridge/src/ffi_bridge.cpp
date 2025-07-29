@@ -86,4 +86,29 @@ void synth_set_filter_resonance(SynthEngineHandle* handle, float value) {
         handle->engine->setResonance(value);
     }
 }
+
+void synth_enable_effects_processing(SynthEngineHandle* handle, bool enable) {
+        if (!handle || !handle->engine) return;
+        handle->engine->enableReverb(enable);
+}
+
+void synth_set_reverb_room_size(SynthEngineHandle* handle, float value) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setReverbParameter(0, value);
+}
+
+void synth_set_reverb_damping(SynthEngineHandle* handle, float value) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setReverbParameter(1, value);
+}
+
+void synth_set_reverb_wet_level(SynthEngineHandle* handle, float value) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setReverbParameter(2, value);
+}
+
+void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setReverbParameter(3, value);
+}
 }

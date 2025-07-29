@@ -14,6 +14,11 @@ class SynthEngine {
   static late void Function(Pointer<Void>, int, double) _synthNoteOn;
   static late void Function(Pointer<Void>, int) _synthNoteOff;
   static late void Function(Pointer<Void>, double) _synthSetResonance;
+  static late void Function(Pointer<Void>, int) _enableEffectsProcessing;
+  static late void Function(Pointer<Void>, double) _setReverbRoomSize;
+  static late void Function(Pointer<Void>, double) _setReverbDamping;
+  static late void Function(Pointer<Void>, double) _setReverbWetLevel;
+  static late void Function(Pointer<Void>, double) _setReverbDryLevel;
 
   static bool _initialized = false;
 
@@ -94,6 +99,36 @@ class SynthEngine {
           .asFunction<void Function(Pointer<Void>, double)>();
       print('✅ Found synth_set_filter_resonance!');
 
+      print('🔍 Looking up synth_enable_effects_processing...');
+      _enableEffectsProcessing = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Int32)>>('synth_enable_effects_processing')
+          .asFunction<void Function(Pointer<Void>, int)>();
+      print('✅ Found synth_enable_effects_processing');
+
+      print('🔍 Looking up synth_set_reverb_room_size...');
+      _setReverbRoomSize = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_reverb_room_size')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('✅ Found synth_set_reverb_room_size');
+
+      print('🔍 Looking up synth_set_reverb_damping...');
+      _setReverbDamping = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_reverb_damping')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('✅ Found synth_set_reverb_damping');
+
+      print('🔍 Looking up synth_set_reverb_wet_level...');
+      _setReverbWetLevel = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_reverb_wet_level')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('✅ Found synth_set_reverb_wet_level');
+
+      print('🔍 Looking up synth_set_reverb_dry_level...');
+      _setReverbDryLevel = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_reverb_dry_level')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('✅ Found synth_set_reverb_dry_level');
+
       // Create synth instance
       print('🔍 Creating synth instance...');
       _synthInstance = _synthCreate();
@@ -161,6 +196,36 @@ class SynthEngine {
     _synthSetResonance(_synthInstance, resonance);
     print('FFI: Resonance set to $resonance');
   }
+
+  static void enableReverb(bool enable) {
+  if (!_initialized) return;
+  _enableEffectsProcessing(_synthInstance, enable ? 1 : 0);
+  print('FFI: Reverb enabled: $enable');
+}
+
+static void setReverbRoomSize(double value) {
+  if (!_initialized) return;
+  _setReverbRoomSize(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Reverb room size: $value');
+}
+
+static void setReverbDamping(double value) {
+  if (!_initialized) return;
+  _setReverbDamping(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Reverb damping: $value');
+}
+
+static void setReverbWetLevel(double value) {
+  if (!_initialized) return;
+  _setReverbWetLevel(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Reverb wet level: $value');
+}
+
+static void setReverbDryLevel(double value) {
+  if (!_initialized) return;
+  _setReverbDryLevel(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Reverb dry level: $value');
+}
 
   // Add these getters for OscillatorControls to access
   static DynamicLibrary get library => _library;

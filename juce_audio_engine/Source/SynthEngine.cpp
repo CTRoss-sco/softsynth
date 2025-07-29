@@ -9,12 +9,16 @@
 SynthEngine::SynthEngine() 
     : cutoffFrequency(1000.0f), currentSampleRate(44100.0),
       globalOsc1Waveform(WaveformType::SINE), globalOsc2Waveform(WaveformType::SINE),
-      globalDetune(0.0f), globalMix(0.5f) {
+      globalDetune(0.0f), globalMix(0.5f), reverbEnabled(false) {
 
     filter = std::make_unique<LowpassFilter>();
     filter->setSampleRate(44100.0);
     filter->setCutoff(1000.0f);
     filter->setResonance(1.0f);
+
+    reverbEffect = std::make_unique<ReverbEffect>();
+    rebuildEffectsChain();
+
     std::cout << "SynthEngine created with dual oscillators" << std::endl;
 }
 
@@ -127,12 +131,57 @@ void SynthEngine::setOscMix(float mix) {
     }
 }
 
+void SynthEngine::enableReverb(bool enable) {
+    reverbEnabled = enable;
+    if (reverbEffect) {
+        reverbEffect->setSampleRate(currentSampleRate);
+        if (enable) {
+            reverbEffect->reset(); // Clear any existing reverb tail
+        }
+    }
+    rebuildEffectsChain(); // Rebuild chain when effects change
+}
+
+void SynthEngine::setReverbParameter(int paramId, float value) {
+    if (reverbEffect) {
+        reverbEffect->setParameter(paramId, value);
+    }
+}
+
+void SynthEngine::rebuildEffectsChain() {
+    effectsChain.clear();
+    
+    // Build effects chain in professional order:
+    // 1. Modulation effects (chorus) - future
+    // 2. Time-based effects (delay) - future  
+    // 3. Spatial effects (reverb) - current
+    
+    if (reverbEnabled && reverbEffect && reverbEffect->isActive()) {
+        effectsChain.push_back([this](float sample) {
+            return reverbEffect->processSample(sample);
+        });
+    }
+}
+
+float SynthEngine::processEffectsChain(float sample) {
+    // Process sample through each effect in the chain
+    for (auto& effect : effectsChain) {
+        sample = effect(sample);
+    }
+    return sample;
+}
+
 // AudioSource overrides
 void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
     currentSampleRate = sampleRate;
     if (filter) {
         filter->setSampleRate(sampleRate);
     }
+
+    if (reverbEffect) {
+        reverbEffect->setSampleRate(sampleRate);
+    }
+
     std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;
 }
 
@@ -178,6 +227,10 @@ void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
         //any filters applied are processed after gain compensation
         if (filter) {
             mixedSample = filter->processSample(mixedSample);
+        }
+
+        if (!effectsChain.empty()) {
+            mixedSample = processEffectsChain(mixedSample);
         }
         
         // Soft limiter to prevent harsh clipping

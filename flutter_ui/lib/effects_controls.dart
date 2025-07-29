@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'synth_engine.dart';
 
+
 class EffectsControls extends StatefulWidget {
 
   const EffectsControls({Key? key}) : super(key: key);
@@ -13,14 +14,21 @@ class _EffectsControlsState extends State<EffectsControls>
     with TickerProviderStateMixin {
   late TabController _tabController;
   
-  // Filter state
+  // Filter state variables
   double _filterCutoff = 1000.0;
   double _filterResonance = 1.0;
+
+  //reverb state variables
+  double _reverbRoomSize = 0.5;
+  double _reverbDamping = 0.5;
+  double _reverbWetLevel = 0.5;
+  double _reverbDryLevel = 0.5;
+  bool _reverbEnabled = true;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 1, vsync: this); // Start with just FILTER tab
+    _tabController = TabController(length: 2, vsync: this); // Start with just FILTER tab
   }
 
   @override
@@ -75,8 +83,10 @@ class _EffectsControlsState extends State<EffectsControls>
                 icon: Icon(Icons.filter_alt, size: 18),
                 text: 'FILTER',
               ),
-              // TODO: Add more tabs as we implement them
-              // Tab(icon: Icon(Icons.waves), text: 'REVERB'),
+              Tab(
+                icon: Icon(Icons.waves, size: 18),
+                text: 'REVERB',
+              ),
               // Tab(icon: Icon(Icons.repeat), text: 'DELAY'),
               // Tab(icon: Icon(Icons.graphic_eq), text: 'CHORUS'),
             ],
@@ -92,7 +102,7 @@ class _EffectsControlsState extends State<EffectsControls>
               controller: _tabController,
               children: [
                 _buildFilterTab(),
-                // TODO: Add other effect tabs
+                _buildReverbTab(),
               ],
             ),
           ),
@@ -181,6 +191,166 @@ class _EffectsControlsState extends State<EffectsControls>
     );
   }
 
+  Widget _buildReverbTab() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Enable/Disable Switch
+          if (SynthEngine.isInitialized) 
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey[850],
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.grey[700]!),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                  const SizedBox(width: 8),
+                  Text('Enable Reverb', style: TextStyle(
+                    color: Colors.white, 
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  )),
+                  Spacer(),
+                  Switch(
+                    value: _reverbEnabled,
+                    onChanged: (value) {
+                      setState(() {
+                        _reverbEnabled = value;
+                      });
+                      SynthEngine.enableReverb(value);
+                      print('🌊 Reverb ${value ? "ENABLED" : "DISABLED"}');
+                    },
+                    activeColor: Colors.cyanAccent,
+                    activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                    inactiveThumbColor: Colors.grey[400],
+                    inactiveTrackColor: Colors.grey[600],
+                  ),
+                ],
+              ),
+            ),
+          
+          const SizedBox(height: 20),
+          
+          // Only show controls if effects engine is initialized
+          if (SynthEngine.isInitialized) ...[
+            // Room Size slider
+            _buildCompactSlider(
+              label: 'Room Size',
+              value: _reverbRoomSize,
+              min: 0.0,
+              max: 1.0,
+              divisions: 100,
+              onChanged: (value) {
+                setState(() {
+                  _reverbRoomSize = value;
+                  SynthEngine.setReverbRoomSize(value);
+                });
+              },
+              valueDisplay: '${(_reverbRoomSize * 100).round()}%',
+              icon: Icons.home,
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // Damping slider
+            _buildCompactSlider(
+              label: 'Damping',
+              value: _reverbDamping,
+              min: 0.0,
+              max: 1.0,
+              divisions: 100,
+              onChanged: (value) {
+                setState(() {
+                  _reverbDamping = value;
+                  SynthEngine.setReverbDamping(value);
+                });
+              },
+              valueDisplay: '${(_reverbDamping * 100).round()}%',
+              icon: Icons.water_drop,
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // Wet Level slider
+            _buildCompactSlider(
+              label: 'Wet Level',
+              value: _reverbWetLevel,
+              min: 0.0,
+              max: 1.0,
+              divisions: 100,
+              onChanged: (value) {
+                setState(() {
+                  _reverbWetLevel = value;
+                  SynthEngine.setReverbWetLevel(value);
+                });
+              },
+              valueDisplay: '${(_reverbWetLevel * 100).round()}%',
+              icon: Icons.waves,
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // Dry Level slider
+            _buildCompactSlider(
+              label: 'Dry Level',
+              value: _reverbDryLevel,
+              min: 0.0,
+              max: 1.0,
+              divisions: 100,
+              onChanged: (value) {
+                setState(() {
+                  _reverbDryLevel = value;
+                  SynthEngine.setReverbDryLevel(value);
+                });
+              },
+              valueDisplay: '${(_reverbDryLevel * 100).round()}%',
+              icon: Icons.volume_up,
+            ),
+          ] else ...[
+            // Show message if effects not available
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[800],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[600]!),
+              ),
+              child: Column(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.grey[400], size: 32),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Reverb effects are currently unavailable',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'The synthesizer will continue to work normally',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildCompactSlider({
     required String label,
     required double value,
@@ -192,7 +362,7 @@ class _EffectsControlsState extends State<EffectsControls>
     int? divisions,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // ✅ Much more compact
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
       decoration: BoxDecoration(
         color: Colors.grey[850],
         borderRadius: BorderRadius.circular(6),
@@ -203,14 +373,14 @@ class _EffectsControlsState extends State<EffectsControls>
         children: [
           Row(
             children: [
-              Icon(icon, color: Colors.cyanAccent, size: 14), // ✅ Smaller icon
+              Icon(icon, color: Colors.cyanAccent, size: 14), 
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   label,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 12, // ✅ Smaller font
+                    fontSize: 12, 
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -219,14 +389,14 @@ class _EffectsControlsState extends State<EffectsControls>
                 valueDisplay,
                 style: TextStyle(
                   color: Colors.cyanAccent,
-                  fontSize: 10, // ✅ Smaller value display
+                  fontSize: 10, 
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
           
-          const SizedBox(height: 4), // ✅ Minimal spacing
+          const SizedBox(height: 4), 
           
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
@@ -235,7 +405,7 @@ class _EffectsControlsState extends State<EffectsControls>
               thumbColor: Colors.cyanAccent,
               overlayColor: Colors.cyanAccent.withOpacity(0.1),
               trackHeight: 2.5, // ✅ Thinner track
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8), // ✅ Smaller thumb
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8), 
             ),
             child: Slider(
               value: value,

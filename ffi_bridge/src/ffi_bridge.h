@@ -38,6 +38,13 @@ SYNTHFFI_API void synth_set_osc_mix(SynthEngineHandle* handle, float mix);
 SYNTHFFI_API void synth_set_filter_cutoff(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_filter_resonance(SynthEngineHandle* handle, float value);
 
+// Effects processing control
+SYNTHFFI_API void synth_enable_effects_processing(SynthEngineHandle* handle, bool enable);
+SYNTHFFI_API void synth_set_reverb_room_size(SynthEngineHandle* handle, float value);
+SYNTHFFI_API void synth_set_reverb_damping(SynthEngineHandle* handle, float value);
+SYNTHFFI_API void synth_set_reverb_wet_level(SynthEngineHandle* handle, float value);
+SYNTHFFI_API void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value);
+
 #ifdef __cplusplus
 }
 #endif

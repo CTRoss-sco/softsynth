@@ -4,8 +4,11 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <juce_core/juce_core.h>
 #include <map>
+#include <vector>
+#include <functional>
 #include "Oscillator.h"
 #include "Effects/Filter.h" 
+#include "Effects/ReverbEffect.h"
 
 #ifdef _WIN32
     #ifdef JUCE_DLL_BUILD
@@ -40,6 +43,10 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
+    //reverb effect control
+    void enableReverb(bool enable);
+    void setReverbParameter(int paramId, float value);
+
 private:
     // Replace simple Voice with DualOscVoice
     std::map<int, DualOscVoice> activeVoices;
@@ -54,10 +61,21 @@ private:
     double currentSampleRate;
 
     std::unique_ptr<LowpassFilter> filter;
+
+    // system for reverb effect
+    std::unique_ptr<ReverbEffect> reverbEffect;
+    bool reverbEnabled;
+
+    //vector structure to manage multiple effects at once
+    std::vector<std::function<float(float)>> effectsChain;
     
     // Audio device management
     juce::AudioDeviceManager audioDeviceManager;
     juce::AudioSourcePlayer audioSourcePlayer;
     
     float midiNoteToFrequency(int midiNote);
+
+    //methods to handle effects chain
+    void rebuildEffectsChain();
+    float processEffectsChain(float sample);
 };
