@@ -16,6 +16,7 @@ class EffectsEngine {
   static late void Function(Pointer<Void>, double) _setReverbDamping;
   static late void Function(Pointer<Void>, double) _setReverbWetLevel;
   static late void Function(Pointer<Void>, double) _setReverbDryLevel;
+  static late void Function(Pointer<Void>, Pointer<Float>, int) _processAudio;
   
   static bool initialize() {
     if (_initialized) return true;
@@ -26,9 +27,9 @@ class EffectsEngine {
       // Try to load EffectsFHI.dll
       try {
         _effectsLibrary = DynamicLibrary.open('./EffectsFHI.dll');
-        print('✅ Loaded EffectsFHI.dll from current directory');
+        print('Loaded EffectsFHI.dll from current directory');
       } catch (e) {
-        print('❌ Failed to load EffectsFHI.dll: $e');
+        print('Failed to load EffectsFHI.dll: $e');
         return false; // Effects unavailable, but synth still works!
       }
       
@@ -64,16 +65,20 @@ class EffectsEngine {
       _setReverbDryLevel = _effectsLibrary
           .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('effects_set_reverb_dry_level')
           .asFunction<void Function(Pointer<Void>, double)>();
+
+      _processAudio = _effectsLibrary
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Pointer<Float>, Int32)>>('effects_process_audio')
+          .asFunction<void Function(Pointer<Void>, Pointer<Float>, int)>();
       
       // Create effects instance
       _effectsInstance = _effectsCreate();
       _effectsSetSampleRate(_effectsInstance, 44100.0);
       _initialized = true;
       
-      print('✅ Effects Engine initialized successfully with reverb!');
+      print('Effects Engine initialized successfully with reverb!');
       return true;
     } catch (e) {
-      print('⚠️ Effects unavailable: $e');
+      print('Effects unavailable: $e');
       return false; // Synth still works without effects!
     }
   }
@@ -109,5 +114,10 @@ class EffectsEngine {
     if (!_initialized) return;
     _effectsDestroy(_effectsInstance);
     _initialized = false;
+  }
+
+  static void processAudioBuffer(Pointer<Float> buffer, int numSamples) {
+    if (!_initialized) return;
+    _processAudio(_effectsInstance, buffer, numSamples);
   }
 }

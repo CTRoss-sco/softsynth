@@ -146,8 +146,8 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 340, // Slightly wider
-      height: 280, // Taller to accommodate content
+      width: 340,
+      height: 280, 
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey[900],
@@ -156,9 +156,8 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
       ),
       child: Column(
         children: [
-          // Tab Bar - Fixed height
           Container(
-            height: 48, // Fixed height for tab bar
+            height: 48, 
             decoration: BoxDecoration(
               color: Colors.grey[800],
               borderRadius: const BorderRadius.only(
@@ -194,7 +193,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
               unselectedLabelColor: Colors.grey[400],
             ),
           ),
-          // Tab Views - Use remaining space
+          // Tab Views
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -212,7 +211,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
 
   Widget _buildOsc1Tab() {
     return Padding(
-      padding: const EdgeInsets.all(12), // Reduced padding
+      padding: const EdgeInsets.all(12), 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -257,11 +256,11 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
 
   Widget _buildOsc2Tab() {
     return Padding(
-      padding: const EdgeInsets.all(12), // Reduced padding
+      padding: const EdgeInsets.all(12), 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with switch - more compact
+          // Header with switch
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -282,7 +281,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
           ),
           const SizedBox(height: 4),
           
-          // Waveform control - more compact
+          // Waveform control
           Opacity(
             opacity: _osc2Enabled ? 1.0 : 0.5,
             child: Column(
@@ -316,7 +315,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
           
           const SizedBox(height: 6),
           
-          // Detune control - more compact
+          // Detune control
           Expanded(
             child: Opacity(
               opacity: _osc2Enabled ? 1.0 : 0.5,
@@ -354,7 +353,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
 
   Widget _buildMixTab() {
     return Padding(
-      padding: const EdgeInsets.all(12), // Reduced padding
+      padding: const EdgeInsets.all(12), 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

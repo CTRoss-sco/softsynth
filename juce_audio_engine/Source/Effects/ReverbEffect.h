@@ -1,4 +1,3 @@
-// juce_audio_engine/Source/Effects/ReverbEffect.h
 #pragma once
 #include "Effect.h"
 #include <vector>

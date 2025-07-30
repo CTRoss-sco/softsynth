@@ -17,6 +17,7 @@ SynthEngine::SynthEngine()
     filter->setResonance(1.0f);
 
     reverbEffect = std::make_unique<ReverbEffect>();
+    delayEffect = std::make_unique<DelayEffect>();
     rebuildEffectsChain();
 
     std::cout << "SynthEngine created with dual oscillators" << std::endl;
@@ -148,6 +149,37 @@ void SynthEngine::setReverbParameter(int paramId, float value) {
     }
 }
 
+void SynthEngine::enableDelay(bool enable) {
+    if (delayEffect) {
+        delayEffect->setEnabled(enable);
+        rebuildEffectsChain();
+    }
+}
+
+void SynthEngine::setDelayTime(float timeInSeconds) {
+    if (delayEffect) {
+        delayEffect->setDelayTime(timeInSeconds);
+    }
+}
+
+void SynthEngine::setDelayFeedback(float feedback) {
+    if (delayEffect) {
+        delayEffect->setFeedback(feedback);
+    }
+}
+
+void SynthEngine::setDelayWetLevel(float wetLevel) {
+    if (delayEffect) {
+        delayEffect->setWetLevel(wetLevel);
+    }
+}
+
+void SynthEngine::setDelayDryLevel(float dryLevel) {
+    if (delayEffect) {
+        delayEffect->setDryLevel(dryLevel);
+    }
+}
+
 void SynthEngine::rebuildEffectsChain() {
     effectsChain.clear();
     
@@ -155,12 +187,21 @@ void SynthEngine::rebuildEffectsChain() {
     // 1. Modulation effects (chorus) - future
     // 2. Time-based effects (delay) - future  
     // 3. Spatial effects (reverb) - current
+
+    //adding reverb after delay to ensure signal is processed correctly
+    if (delayEffect && delayEffect->isActive()) {
+        effectsChain.push_back([this](float sample) {
+            return delayEffect->processSample(sample);
+        });
+    }
     
     if (reverbEnabled && reverbEffect && reverbEffect->isActive()) {
         effectsChain.push_back([this](float sample) {
             return reverbEffect->processSample(sample);
         });
     }
+
+    
 }
 
 float SynthEngine::processEffectsChain(float sample) {
@@ -180,6 +221,10 @@ void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) 
 
     if (reverbEffect) {
         reverbEffect->setSampleRate(sampleRate);
+    }
+
+    if (delayEffect) {
+        delayEffect->setSampleRate(sampleRate);
     }
 
     std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;

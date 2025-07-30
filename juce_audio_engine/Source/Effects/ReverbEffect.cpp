@@ -1,4 +1,3 @@
-// juce_audio_engine/Source/Effects/ReverbEffect.cpp
 #include "ReverbEffect.h"
 #include <algorithm>
 
@@ -39,7 +38,7 @@ float ReverbEffect::processSample(float sample) {
 
 void ReverbEffect::setSampleRate(double sr) {
     sampleRate = sr;
-    // Delay sizes are fixed, but you could scale them here if needed
+    // Delay sizes are fixed
 }
 
 void ReverbEffect::reset() {

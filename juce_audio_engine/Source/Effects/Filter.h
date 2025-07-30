@@ -9,9 +9,6 @@ private:
     float z1, z2;  // Filter state variables
     double sampleRate;
     
-    // Helper method (like your generateWaveform)
-    //void calculateCoefficients();
-    
 public:
     LowpassFilter();
     
@@ -20,11 +17,8 @@ public:
     void setSampleRate(double sr) override;
     void reset() override;
     
-    // Filter-specific methods (like your setFrequency/setWaveform)
+    // Filter-specific methods
     void setCutoff(float freq);
     void setResonance(float q);
 };
 
-// Future filter types will go here
-// class HighpassFilter : public Effect { ... };
-// class BandpassFilter : public Effect { ... };

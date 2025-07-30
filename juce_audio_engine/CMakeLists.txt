@@ -19,6 +19,8 @@ add_library(SynthEngine SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/Source/Effects/Filter.cpp"
     Source/Effects/ReverbEffect.cpp
     Source/Effects/ReverbEffect.h
+    Source/Effects/DelayEffect.cpp
+    Source/Effects/DelayEffect.h
 )
 
 # Link JUCE modules to your SynthEngine

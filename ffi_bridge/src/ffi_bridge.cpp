@@ -111,4 +111,29 @@ void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value) {
     if (!handle || !handle->engine) return;
     handle->engine->setReverbParameter(3, value);
 }
+
+void synth_enable_delay(SynthEngineHandle* handle, int enable) {
+    if (!handle || !handle->engine) return;
+    handle->engine->enableDelay(enable != 0);
+}
+
+void synth_set_delay_time(SynthEngineHandle* handle, float timeInSeconds) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setDelayTime(timeInSeconds);
+}
+
+void synth_set_delay_feedback(SynthEngineHandle* handle, float feedback) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setDelayFeedback(feedback);
+}
+
+void synth_set_delay_wet_level(SynthEngineHandle* handle, float wetLevel) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setDelayWetLevel(wetLevel);
+}
+
+void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setDelayDryLevel(dryLevel);
+}
 }

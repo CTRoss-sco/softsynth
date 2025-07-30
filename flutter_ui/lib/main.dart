@@ -90,9 +90,9 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
       // ADD THIS: Initialize effects engine
       bool effectsSuccess = EffectsEngine.initialize();
       if (effectsSuccess) {
-        print('✅ Effects Engine initialized successfully!');
+        print('Effects Engine initialized successfully!');
       } else {
-        print('⚠️ Effects unavailable, but synth still works');
+        print('Effects unavailable, but synth still works');
       }
       
       if (oscSuccess) {
@@ -244,11 +244,6 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.show_chart,
-                                  color: Colors.grey[500],
-                                  size: 48,
-                                ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'OSCILLOSCOPE',
@@ -256,13 +251,6 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                                     color: Colors.grey[500],
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Coming Soon',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 12,
                                   ),
                                 ),
                               ],

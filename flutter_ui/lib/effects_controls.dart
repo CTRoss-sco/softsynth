@@ -25,10 +25,17 @@ class _EffectsControlsState extends State<EffectsControls>
   double _reverbDryLevel = 0.5;
   bool _reverbEnabled = true;
 
+  //delay state variables
+  double _delayTime = 0.25;
+  double _delayFeedback = 0.3;
+  double _delayWetLevel = 0.5;
+  double _delayDryLevel = 0.5;
+  bool _delayEnabled = false;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this); // Start with just FILTER tab
+    _tabController = TabController(length: 3, vsync: this); // Start with just FILTER tab
   }
 
   @override
@@ -87,7 +94,7 @@ class _EffectsControlsState extends State<EffectsControls>
                 icon: Icon(Icons.waves, size: 18),
                 text: 'REVERB',
               ),
-              // Tab(icon: Icon(Icons.repeat), text: 'DELAY'),
+              Tab(icon: Icon(Icons.repeat), text: 'DELAY'),
               // Tab(icon: Icon(Icons.graphic_eq), text: 'CHORUS'),
             ],
             labelColor: Colors.cyanAccent,
@@ -103,6 +110,7 @@ class _EffectsControlsState extends State<EffectsControls>
               children: [
                 _buildFilterTab(),
                 _buildReverbTab(),
+                _buildDelayTab(),
               ],
             ),
           ),
@@ -350,6 +358,166 @@ class _EffectsControlsState extends State<EffectsControls>
       ),
     );
   }
+
+  Widget _buildDelayTab() {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Enable/Disable Switch
+        if (SynthEngine.isInitialized) 
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey[850],
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: Colors.grey[700]!),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                const SizedBox(width: 8),
+                Text('Enable Delay', style: TextStyle(
+                  color: Colors.white, 
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                )),
+                Spacer(),
+                Switch(
+                  value: _delayEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _delayEnabled = value;
+                    });
+                    SynthEngine.enableDelay(value);
+                    print('🚀 Delay ${value ? "ENABLED" : "DISABLED"}');
+                  },
+                  activeColor: Colors.cyanAccent,
+                  activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                  inactiveThumbColor: Colors.grey[400],
+                  inactiveTrackColor: Colors.grey[600],
+                ),
+              ],
+            ),
+          ),
+        
+        const SizedBox(height: 20),
+        
+        // Only show controls if effects engine is initialized
+        if (SynthEngine.isInitialized) ...[
+          // Delay Time slider
+          _buildCompactSlider(
+            label: 'Delay Time',
+            value: _delayTime,
+            min: 0.001,
+            max: 2.0,
+            divisions: 200,
+            onChanged: (value) {
+              setState(() {
+                _delayTime = value;
+                SynthEngine.setDelayTime(value);
+              });
+            },
+            valueDisplay: '${(_delayTime * 1000).round()} ms',
+            icon: Icons.access_time,
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // Feedback slider
+          _buildCompactSlider(
+            label: 'Feedback',
+            value: _delayFeedback,
+            min: 0.0,
+            max: 0.95,
+            divisions: 95,
+            onChanged: (value) {
+              setState(() {
+                _delayFeedback = value;
+                SynthEngine.setDelayFeedback(value);
+              });
+            },
+            valueDisplay: '${(_delayFeedback * 100).round()}%',
+            icon: Icons.repeat,
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // Wet Level slider
+          _buildCompactSlider(
+            label: 'Wet Level',
+            value: _delayWetLevel,
+            min: 0.0,
+            max: 1.0,
+            divisions: 100,
+            onChanged: (value) {
+              setState(() {
+                _delayWetLevel = value;
+                SynthEngine.setDelayWetLevel(value);
+              });
+            },
+            valueDisplay: '${(_delayWetLevel * 100).round()}%',
+            icon: Icons.waves,
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // Dry Level slider
+          _buildCompactSlider(
+            label: 'Dry Level',
+            value: _delayDryLevel,
+            min: 0.0,
+            max: 1.0,
+            divisions: 100,
+            onChanged: (value) {
+              setState(() {
+                _delayDryLevel = value;
+                SynthEngine.setDelayDryLevel(value);
+              });
+            },
+            valueDisplay: '${(_delayDryLevel * 100).round()}%',
+            icon: Icons.volume_up,
+          ),
+        ] else ...[
+          // Show message if effects not available
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[600]!),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.info_outline, color: Colors.grey[400], size: 32),
+                const SizedBox(height: 12),
+                Text(
+                  'Delay effects are currently unavailable',
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'The synthesizer will continue to work normally',
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    ),
+  );
+}
 
   Widget _buildCompactSlider({
     required String label,

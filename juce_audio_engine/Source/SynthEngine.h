@@ -9,6 +9,7 @@
 #include "Oscillator.h"
 #include "Effects/Filter.h" 
 #include "Effects/ReverbEffect.h"
+#include "Effects/DelayEffect.h"
 
 #ifdef _WIN32
     #ifdef JUCE_DLL_BUILD
@@ -47,6 +48,13 @@ public:
     void enableReverb(bool enable);
     void setReverbParameter(int paramId, float value);
 
+    //delay effect control
+    void enableDelay(bool enable);
+    void setDelayTime(float timeInSeconds);
+    void setDelayFeedback(float feedback);
+    void setDelayWetLevel(float wet);
+    void setDelayDryLevel(float dry);
+
 private:
     // Replace simple Voice with DualOscVoice
     std::map<int, DualOscVoice> activeVoices;
@@ -65,6 +73,9 @@ private:
     // system for reverb effect
     std::unique_ptr<ReverbEffect> reverbEffect;
     bool reverbEnabled;
+
+    // system for delay effect
+    std::unique_ptr<DelayEffect> delayEffect;
 
     //vector structure to manage multiple effects at once
     std::vector<std::function<float(float)>> effectsChain;

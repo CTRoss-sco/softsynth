@@ -40,10 +40,19 @@ SYNTHFFI_API void synth_set_filter_resonance(SynthEngineHandle* handle, float va
 
 // Effects processing control
 SYNTHFFI_API void synth_enable_effects_processing(SynthEngineHandle* handle, bool enable);
+
+// Reverb effect control
 SYNTHFFI_API void synth_set_reverb_room_size(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_damping(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_wet_level(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value);
+
+// Delay effect control
+SYNTHFFI_API void synth_enable_delay(SynthEngineHandle* handle, int enable);
+SYNTHFFI_API void synth_set_delay_time(SynthEngineHandle* handle, float timeInSeconds);
+SYNTHFFI_API void synth_set_delay_feedback(SynthEngineHandle* handle, float feedback);
+SYNTHFFI_API void synth_set_delay_wet_level(SynthEngineHandle* handle, float wetLevel);
+SYNTHFFI_API void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel);
 
 #ifdef __cplusplus
 }

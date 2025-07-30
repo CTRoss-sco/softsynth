@@ -25,8 +25,6 @@ private:
         SynthEngine synth;
         
         // Test known frequency values using instance method
-        // Note: We'll test this indirectly through noteOn behavior
-        // since midiNoteToFrequency is private
         
         // Test that noteOn accepts valid MIDI values without crashing
         synth.noteOn(69, 0.8f);  // A4 = 440Hz
@@ -114,7 +112,6 @@ private:
         std::cout << "Testing audio buffer processing..." << std::endl;
         
         // Note: This would require initializing JUCE AudioBuffer
-        // For now, we test that the prepareToPlay function doesn't crash
         SynthEngine synth;
         synth.prepareToPlay(512, 44100.0);
         
@@ -146,14 +143,14 @@ public:
             testAudioBufferProcessing();
             std::cout << std::endl;
             
-            std::cout << "===========================================" << std::endl;
-            std::cout << "          ✅ ALL TESTS PASSED!" << std::endl;
-            std::cout << "===========================================" << std::endl;
+            
+            std::cout << "ALL TESTS PASSED!" << std::endl;
+            
             
         } catch (const std::exception& e) {
-            std::cout << "❌ Test failed with exception: " << e.what() << std::endl;
+            std::cout << "Test failed with exception: " << e.what() << std::endl;
         } catch (...) {
-            std::cout << "❌ Test failed with unknown exception" << std::endl;
+            std::cout << "Test failed with unknown exception" << std::endl;
         }
     }
 };

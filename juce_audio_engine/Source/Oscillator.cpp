@@ -1,7 +1,7 @@
 #include "Oscillator.h"
 #include <algorithm>
 
-// ========== Oscillator Implementation ==========
+//Oscillator Implementation
 
 Oscillator::Oscillator() 
     : frequency(440.0f), phase(0.0f), waveform(WaveformType::SINE) {
@@ -54,7 +54,7 @@ float Oscillator::generateWaveform(float phase) {
     }
 }
 
-// ========== DualOscVoice Implementation ==========
+//DualOscVoice Implementation
 
 DualOscVoice::DualOscVoice() 
     : velocity(0.0f), detune(0.0f), mix(0.5f), active(false) {
