@@ -32,10 +32,19 @@ class _EffectsControlsState extends State<EffectsControls>
   double _delayDryLevel = 0.5;
   bool _delayEnabled = false;
 
+  //chorus state variables
+  bool _chorusEnabled = false;
+  double _chorusRate = 1.5;
+  double _chorusDepth = 0.4;
+  int _chorusVoices = 2;
+  double _chorusFeedback = 0.2;
+  double _chorusWetLevel = 0.5;
+  double _chorusDryLevel = 0.8;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this); // Start with just FILTER tab
+    _tabController = TabController(length: 4, vsync: this); // Start with just FILTER tab
   }
 
   @override
@@ -95,7 +104,7 @@ class _EffectsControlsState extends State<EffectsControls>
                 text: 'REVERB',
               ),
               Tab(icon: Icon(Icons.repeat), text: 'DELAY'),
-              // Tab(icon: Icon(Icons.graphic_eq), text: 'CHORUS'),
+              Tab(icon: Icon(Icons.graphic_eq), text: 'CHORUS'),
             ],
             labelColor: Colors.cyanAccent,
             unselectedLabelColor: Colors.grey[400],
@@ -111,6 +120,7 @@ class _EffectsControlsState extends State<EffectsControls>
                 _buildFilterTab(),
                 _buildReverbTab(),
                 _buildDelayTab(),
+                _buildChorusTab(),
               ],
             ),
           ),
@@ -519,6 +529,211 @@ class _EffectsControlsState extends State<EffectsControls>
   );
 }
 
+Widget _buildChorusTab() {
+  return Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Enable/Disable Switch
+        if (SynthEngine.isInitialized) 
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.grey[850],
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: Colors.grey[700]!),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                const SizedBox(width: 8),
+                Text('Enable Chorus', style: TextStyle(
+                  color: Colors.white, 
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                )),
+                Spacer(),
+                Switch(
+                  value: _chorusEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _chorusEnabled = value;
+                    });
+                    SynthEngine.enableChorus(value);
+                    print('🌊 Chorus ${value ? "ENABLED" : "DISABLED"}');
+                  },
+                  activeColor: Colors.cyanAccent,
+                  activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                  inactiveThumbColor: Colors.grey[400],
+                  inactiveTrackColor: Colors.grey[600],
+                ),
+              ],
+            ),
+          ),
+        
+        const SizedBox(height: 12),
+        
+        // Only show controls if effects engine is initialized
+        if (SynthEngine.isInitialized) ...[
+          // Rate slider
+          _buildCompactSlider(
+            label: 'Rate',
+            value: _chorusRate,
+            min: 0.1,
+            max: 5.0,
+            divisions: 49,
+            onChanged: (value) {
+              setState(() {
+                _chorusRate = value;
+                SynthEngine.setChorusRate(value);
+              });
+            },
+            valueDisplay: '${_chorusRate.toStringAsFixed(1)} Hz',
+            icon: Icons.speed,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Depth slider
+          _buildCompactSlider(
+            label: 'Depth',
+            value: _chorusDepth,
+            min: 0.0,
+            max: 1.0,
+            divisions: 100,
+            onChanged: (value) {
+              setState(() {
+                _chorusDepth = value;
+                SynthEngine.setChorusDepth(value);
+              });
+            },
+            valueDisplay: '${(_chorusDepth * 100).round()}%',
+            icon: Icons.waves,
+          ),
+          
+          const SizedBox(height: 14),
+          
+          // Voices slider
+          _buildCompactSlider(
+            label: 'Voices',
+            value: _chorusVoices.toDouble(),
+            min: 2,
+            max: 4,
+            divisions: 2,
+            onChanged: (value) {
+              setState(() {
+                _chorusVoices = value.round();
+                SynthEngine.setChorusVoices(_chorusVoices);
+              });
+            },
+            valueDisplay: '$_chorusVoices',
+            icon: Icons.graphic_eq,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Feedback slider
+          _buildCompactSlider(
+            label: 'Feedback',
+            value: _chorusFeedback,
+            min: 0.0,
+            max: 0.3,
+            divisions: 30,
+            onChanged: (value) {
+              setState(() {
+                _chorusFeedback = value;
+                SynthEngine.setChorusFeedback(value);
+              });
+            },
+            valueDisplay: '${(_chorusFeedback * 100).round()}%',
+            icon: Icons.repeat,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Combined Wet/Dry Row (saves significant space)
+          Row(
+            children: [
+              // Wet Level (left side)
+              Expanded(
+                child: _buildCompactSlider(
+                  label: 'Wet',
+                  value: _chorusWetLevel,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 100,
+                  onChanged: (value) {
+                    setState(() {
+                      _chorusWetLevel = value;
+                      SynthEngine.setChorusWetLevel(value);
+                    });
+                  },
+                  valueDisplay: '${(_chorusWetLevel * 100).round()}%',
+                  icon: Icons.waves,
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Dry Level (right side)
+              Expanded(
+                child: _buildCompactSlider(
+                  label: 'Dry',
+                  value: _chorusDryLevel,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 100,
+                  onChanged: (value) {
+                    setState(() {
+                      _chorusDryLevel = value;
+                      SynthEngine.setChorusDryLevel(value);
+                    });
+                  },
+                  valueDisplay: '${(_chorusDryLevel * 100).round()}%',
+                  icon: Icons.volume_up,
+                ),
+              ),
+            ],
+          ),
+        ] else ...[
+          // Show message if effects not available
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[600]!),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.info_outline, color: Colors.grey[400], size: 32),
+                const SizedBox(height: 12),
+                Text(
+                  'Chorus effects are currently unavailable',
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'The synthesizer will continue to work normally',
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
   Widget _buildCompactSlider({
     required String label,
     required double value,
@@ -530,7 +745,7 @@ class _EffectsControlsState extends State<EffectsControls>
     int? divisions,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), 
       decoration: BoxDecoration(
         color: Colors.grey[850],
         borderRadius: BorderRadius.circular(6),

@@ -54,6 +54,15 @@ SYNTHFFI_API void synth_set_delay_feedback(SynthEngineHandle* handle, float feed
 SYNTHFFI_API void synth_set_delay_wet_level(SynthEngineHandle* handle, float wetLevel);
 SYNTHFFI_API void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel);
 
+// Chorus effect controls
+SYNTHFFI_API void synth_enable_chorus(SynthEngineHandle* handle, int enable);
+SYNTHFFI_API void synth_set_chorus_rate(SynthEngineHandle* handle, float rate);
+SYNTHFFI_API void synth_set_chorus_depth(SynthEngineHandle* handle, float depth);
+SYNTHFFI_API void synth_set_chorus_voices(SynthEngineHandle* handle, int voices);
+SYNTHFFI_API void synth_set_chorus_feedback(SynthEngineHandle* handle, float feedback);
+SYNTHFFI_API void synth_set_chorus_wet_level(SynthEngineHandle* handle, float wetLevel);
+SYNTHFFI_API void synth_set_chorus_dry_level(SynthEngineHandle* handle, float dryLevel);
+
 #ifdef __cplusplus
 }
 #endif

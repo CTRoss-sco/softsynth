@@ -21,6 +21,8 @@ add_library(SynthEngine SHARED
     Source/Effects/ReverbEffect.h
     Source/Effects/DelayEffect.cpp
     Source/Effects/DelayEffect.h
+    Source/Effects/ChorusEffect.cpp
+    Source/Effects/ChorusEffect.h
 )
 
 # Link JUCE modules to your SynthEngine

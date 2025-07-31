@@ -13,17 +13,33 @@ class SynthEngine {
   static late void Function(Pointer<Void>, double) _synthSetCutoff;
   static late void Function(Pointer<Void>, int, double) _synthNoteOn;
   static late void Function(Pointer<Void>, int) _synthNoteOff;
+
+
   static late void Function(Pointer<Void>, double) _synthSetResonance;
+
+
   static late void Function(Pointer<Void>, int) _enableEffectsProcessing;
+
+
   static late void Function(Pointer<Void>, double) _setReverbRoomSize;
   static late void Function(Pointer<Void>, double) _setReverbDamping;
   static late void Function(Pointer<Void>, double) _setReverbWetLevel;
   static late void Function(Pointer<Void>, double) _setReverbDryLevel;
+
+
   static late void Function(Pointer<Void>, int) _enableDelay;
   static late void Function(Pointer<Void>, double) _setDelayTime;
   static late void Function(Pointer<Void>, double) _setDelayFeedback;
   static late void Function(Pointer<Void>, double) _setDelayWetLevel;
   static late void Function(Pointer<Void>, double) _setDelayDryLevel;
+
+  static late void Function(Pointer<Void>, int) _enableChorus;
+  static late void Function(Pointer<Void>, double) _setChorusRate;
+  static late void Function(Pointer<Void>, double) _setChorusDepth;
+  static late void Function(Pointer<Void>, int) _setChorusVoices;
+  static late void Function(Pointer<Void>, double) _setChorusFeedback;
+  static late void Function(Pointer<Void>, double) _setChorusWetLevel;
+  static late void Function(Pointer<Void>, double) _setChorusDryLevel;
 
   static bool _initialized = false;
 
@@ -164,6 +180,48 @@ class SynthEngine {
           .asFunction<void Function(Pointer<Void>, double)>();
       print('Found synth_set_delay_dry_level');
 
+      print('Looking up synth_enable_chorus');
+      _enableChorus = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Int32)>>('synth_enable_chorus')
+          .asFunction<void Function(Pointer<Void>, int)>();
+      print('Found synth_enable_chorus');
+
+      print('Looking up synth_set_chorus_rate');
+      _setChorusRate = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_chorus_rate')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('Found synth_set_chorus_rate');
+
+      print('Looking up synth_set_chorus_depth');
+      _setChorusDepth = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_chorus_depth')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('Found synth_set_chorus_depth');
+
+      print('Looking up synth_set_chorus_voices');
+      _setChorusVoices = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Int32)>>('synth_set_chorus_voices')
+          .asFunction<void Function(Pointer<Void>, int)>();
+      print('Found synth_set_chorus_voices');
+
+      print('Looking up synth_set_chorus_feedback');
+      _setChorusFeedback = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_chorus_feedback')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('Found synth_set_chorus_feedback');
+
+      print('Looking up synth_set_chorus_wet_level');
+      _setChorusWetLevel = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_chorus_wet_level')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('Found synth_set_chorus_wet_level');
+
+      print('Looking up synth_set_chorus_dry_level');
+      _setChorusDryLevel = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_chorus_dry_level')
+          .asFunction<void Function(Pointer<Void>, double)>();
+      print('Found synth_set_chorus_dry_level');
+
       // Create synth instance
       print('Creating synth instance...');
       _synthInstance = _synthCreate();
@@ -291,6 +349,49 @@ static void setDelayDryLevel(double value) {
   _setDelayDryLevel(_synthInstance, value.clamp(0.0, 1.0));
   print('FFI: Delay dry level: $value');
 }
+
+static void enableChorus(bool enable) {
+  if (!_initialized) return;
+  _enableChorus(_synthInstance, enable ? 1 : 0);
+  print('FFI: Chorus enabled: $enable');
+}
+
+static void setChorusRate(double value) {
+  if (!_initialized) return;
+  _setChorusRate(_synthInstance, value.clamp(0.1, 5.0));
+  print('FFI: Chorus rate: $value');
+}
+
+static void setChorusDepth(double value) {
+  if (!_initialized) return;
+  _setChorusDepth(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Chorus depth: $value');
+}
+
+static void setChorusVoices(int value) {
+  if (!_initialized) return;
+  _setChorusVoices(_synthInstance, value.clamp(2, 4));
+  print('FFI: Chorus voices: $value');
+}
+
+static void setChorusFeedback(double value) {
+  if (!_initialized) return;
+  _setChorusFeedback(_synthInstance, value.clamp(0.0, 0.3));
+  print('FFI: Chorus feedback: $value');
+}
+
+static void setChorusWetLevel(double value) {
+  if (!_initialized) return;
+  _setChorusWetLevel(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Chorus wet level: $value');
+}
+
+static void setChorusDryLevel(double value) {
+  if (!_initialized) return;
+  _setChorusDryLevel(_synthInstance, value.clamp(0.0, 1.0));
+  print('FFI: Chorus dry level: $value');
+}
+
   // Add these getters for OscillatorControls to access
   static DynamicLibrary get library => _library;
   static Pointer<Void> get synthHandle => _synthInstance;

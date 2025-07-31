@@ -18,6 +18,7 @@ SynthEngine::SynthEngine()
 
     reverbEffect = std::make_unique<ReverbEffect>();
     delayEffect = std::make_unique<DelayEffect>();
+    chorusEffect = std::make_unique<ChorusEffect>();
     rebuildEffectsChain();
 
     std::cout << "SynthEngine created with dual oscillators" << std::endl;
@@ -180,15 +181,63 @@ void SynthEngine::setDelayDryLevel(float dryLevel) {
     }
 }
 
+void SynthEngine::enableChorus(bool enable) {
+    if (chorusEffect) {
+        chorusEffect->setEnabled(enable);
+        rebuildEffectsChain();
+    }
+}
+
+void SynthEngine::setChorusRate(float rate) {
+    if (chorusEffect) {
+        chorusEffect->setRate(rate);
+    }
+}
+
+void SynthEngine::setChorusDepth(float depth) {
+    if (chorusEffect) {
+        chorusEffect->setDepth(depth);
+    }
+}
+
+void SynthEngine::setChorusVoices(int voices) {
+    if (chorusEffect) {
+        chorusEffect->setVoices(voices);
+    }
+}
+
+void SynthEngine::setChorusFeedback(float feedback) {
+    if (chorusEffect) {
+        chorusEffect->setFeedback(feedback);
+    }
+}
+
+void SynthEngine::setChorusWetLevel(float wetLevel) {
+    if (chorusEffect) {
+        chorusEffect->setWetLevel(wetLevel);
+    }
+}
+
+void SynthEngine::setChorusDryLevel(float dryLevel) {
+    if (chorusEffect) {
+        chorusEffect->setDryLevel(dryLevel);
+    }
+}
+
 void SynthEngine::rebuildEffectsChain() {
     effectsChain.clear();
     
-    // Build effects chain in professional order:
-    // 1. Modulation effects (chorus) - future
-    // 2. Time-based effects (delay) - future  
-    // 3. Spatial effects (reverb) - current
+    // Effects chain is built in professional order:
+    // 1. Modulation effects (chorus) 
+    // 2. Time-based effects (delay)   
+    // 3. Spatial effects (reverb) 
 
-    //adding reverb after delay to ensure signal is processed correctly
+    if (chorusEffect && chorusEffect->isActive()) {
+        effectsChain.push_back([this](float sample) {
+            return chorusEffect->processSample(sample);
+        });
+    }
+
     if (delayEffect && delayEffect->isActive()) {
         effectsChain.push_back([this](float sample) {
             return delayEffect->processSample(sample);
@@ -225,6 +274,10 @@ void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) 
 
     if (delayEffect) {
         delayEffect->setSampleRate(sampleRate);
+    }
+
+    if (chorusEffect) {
+        chorusEffect->setSampleRate(sampleRate);
     }
 
     std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;

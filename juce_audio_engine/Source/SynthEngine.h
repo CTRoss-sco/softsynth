@@ -10,6 +10,7 @@
 #include "Effects/Filter.h" 
 #include "Effects/ReverbEffect.h"
 #include "Effects/DelayEffect.h"
+#include "Effects/ChorusEffect.h"
 
 #ifdef _WIN32
     #ifdef JUCE_DLL_BUILD
@@ -44,16 +45,25 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
-    //reverb effect control
+    //reverb effect controls
     void enableReverb(bool enable);
     void setReverbParameter(int paramId, float value);
 
-    //delay effect control
+    //delay effect controls
     void enableDelay(bool enable);
     void setDelayTime(float timeInSeconds);
     void setDelayFeedback(float feedback);
     void setDelayWetLevel(float wet);
     void setDelayDryLevel(float dry);
+
+    //chorus effect controls
+    void enableChorus(bool enable);
+    void setChorusRate(float rate);
+    void setChorusDepth(float depth);
+    void setChorusVoices(int voices);
+    void setChorusFeedback(float feedback);
+    void setChorusWetLevel(float wetLevel);
+    void setChorusDryLevel(float dryLevel);
 
 private:
     // Replace simple Voice with DualOscVoice
@@ -76,6 +86,9 @@ private:
 
     // system for delay effect
     std::unique_ptr<DelayEffect> delayEffect;
+
+    //system for chorus effect
+    std::unique_ptr<ChorusEffect> chorusEffect;
 
     //vector structure to manage multiple effects at once
     std::vector<std::function<float(float)>> effectsChain;

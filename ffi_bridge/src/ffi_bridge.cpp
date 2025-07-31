@@ -136,4 +136,39 @@ void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel) {
     if (!handle || !handle->engine) return;
     handle->engine->setDelayDryLevel(dryLevel);
 }
+
+void synth_enable_chorus(SynthEngineHandle* handle, int enable) {
+    if (!handle || !handle->engine) return;
+    handle->engine->enableChorus(enable != 0);
+}
+
+void synth_set_chorus_rate(SynthEngineHandle* handle, float rate) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusRate(rate);
+}
+
+void synth_set_chorus_depth(SynthEngineHandle* handle, float depth) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusDepth(depth);
+}
+
+void synth_set_chorus_voices(SynthEngineHandle* handle, int voices) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusVoices(voices);
+}
+
+void synth_set_chorus_feedback(SynthEngineHandle* handle, float feedback) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusFeedback(feedback);
+}
+
+void synth_set_chorus_wet_level(SynthEngineHandle* handle, float wetLevel) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusWetLevel(wetLevel);
+}
+
+void synth_set_chorus_dry_level(SynthEngineHandle* handle, float dryLevel) {
+    if (!handle || !handle->engine) return;
+    handle->engine->setChorusDryLevel(dryLevel);
+}
 }
