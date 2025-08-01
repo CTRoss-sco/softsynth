@@ -63,6 +63,10 @@ SYNTHFFI_API void synth_set_chorus_feedback(SynthEngineHandle* handle, float fee
 SYNTHFFI_API void synth_set_chorus_wet_level(SynthEngineHandle* handle, float wetLevel);
 SYNTHFFI_API void synth_set_chorus_dry_level(SynthEngineHandle* handle, float dryLevel);
 
+//Oscilloscope functions
+SYNTHFFI_API void synth_enable_oscilloscope(SynthEngineHandle* handle, int enable);
+SYNTHFFI_API int synth_get_waveform_data(SynthEngineHandle* handle, float* buffer, int bufferSize);
+
 #ifdef __cplusplus
 }
 #endif

@@ -171,4 +171,25 @@ void synth_set_chorus_dry_level(SynthEngineHandle* handle, float dryLevel) {
     if (!handle || !handle->engine) return;
     handle->engine->setChorusDryLevel(dryLevel);
 }
+
+void synth_enable_oscilloscope(SynthEngineHandle* handle, int enable) {
+    if (!handle || !handle->engine) {
+        printf("FFI: Invalid handle for enable_oscilloscope\n");
+        return;
+    }
+
+    handle->engine->enableOscilloscope(enable != 0);
+    printf("FFI: Oscilloscope %s\n", enable ? "ENABLED" : "DISABLED");
+}
+
+int synth_get_waveform_data(SynthEngineHandle* handle, float* buffer, int bufferSize) {
+    if (!handle || !handle->engine || !buffer) {
+        printf("FFI: Invalid parameters for get_waveform_data\n");
+        return 0;
+    }
+
+    int samplesReturned = handle->engine->getWaveformData(buffer, bufferSize);
+
+    return samplesReturned;
+}
 }

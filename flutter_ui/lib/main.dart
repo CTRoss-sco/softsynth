@@ -4,6 +4,7 @@ import 'synth_engine.dart';
 import 'oscillator_controls.dart'; 
 import 'effects_controls.dart';
 import 'effects_engine.dart';
+import 'oscilloscope_controls.dart';
 
 void main() {
   runApp(const SynthApp());
@@ -234,29 +235,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                       // Right column - Future oscilloscope
                       Expanded(
                         flex: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey[700]!),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 8),
-                                Text(
-                                  'OSCILLOSCOPE',
-                                  style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: OscilloscopeControls(),
                       ),
                     ],
                   ),

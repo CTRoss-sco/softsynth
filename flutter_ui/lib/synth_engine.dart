@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'package:ffi/ffi.dart'; 
 
 // FFI bindings for the SynthFFI library
 class SynthEngine {
@@ -40,6 +41,9 @@ class SynthEngine {
   static late void Function(Pointer<Void>, double) _setChorusFeedback;
   static late void Function(Pointer<Void>, double) _setChorusWetLevel;
   static late void Function(Pointer<Void>, double) _setChorusDryLevel;
+
+  static late void Function(Pointer<Void>, int) _enableOscilloscope;
+  static late int Function(Pointer<Void>, Pointer<Float>, int) _getWaveformData;
 
   static bool _initialized = false;
 
@@ -222,6 +226,18 @@ class SynthEngine {
           .asFunction<void Function(Pointer<Void>, double)>();
       print('Found synth_set_chorus_dry_level');
 
+      print('Looking up synth_enable_oscilloscope');
+      _enableOscilloscope = _library
+          .lookup<NativeFunction<Void Function(Pointer<Void>, Int32)>>('synth_enable_oscilloscope')
+          .asFunction<void Function(Pointer<Void>, int)>();
+      print('Found synth_enable_oscilloscope');
+
+      print('Looking up synth_get_waveform_data');
+      _getWaveformData = _library
+          .lookup<NativeFunction<Int32 Function(Pointer<Void>, Pointer<Float>, Int32)>>('synth_get_waveform_data')
+          .asFunction<int Function(Pointer<Void>, Pointer<Float>, int)>();
+      print('Found synth_get_waveform_data');
+
       // Create synth instance
       print('Creating synth instance...');
       _synthInstance = _synthCreate();
@@ -390,6 +406,31 @@ static void setChorusDryLevel(double value) {
   if (!_initialized) return;
   _setChorusDryLevel(_synthInstance, value.clamp(0.0, 1.0));
   print('FFI: Chorus dry level: $value');
+}
+
+static void enableOscilloscope(bool enable) {
+  if (!_initialized) return;
+  _enableOscilloscope(_synthInstance, enable ? 1 : 0);
+  print('FFI: Oscilloscope enabled: $enable');
+}
+
+static List<double> getWaveformData() {
+  if (!_initialized) return [];
+
+  const int bufferSize = 512;
+  final buffer = calloc<Float>(bufferSize);
+
+  try {
+    final samplesReceived = _getWaveformData(_synthInstance, buffer, bufferSize);
+
+    if (samplesReceived > 0) {
+      return List<double>.generate(samplesReceived, (i) => buffer[i]);
+    }
+
+    return [];
+  } finally {
+    calloc.free(buffer);
+  }
 }
 
   // Add these getters for OscillatorControls to access

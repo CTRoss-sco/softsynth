@@ -65,6 +65,10 @@ public:
     void setChorusWetLevel(float wetLevel);
     void setChorusDryLevel(float dryLevel);
 
+    //methods to managed oscilloscope visualisation
+    void enableOscilloscope(bool enable);
+    int getWaveformData(float* buffer, int bufferSize);
+
 private:
     // Replace simple Voice with DualOscVoice
     std::map<int, DualOscVoice> activeVoices;
@@ -89,6 +93,13 @@ private:
 
     //system for chorus effect
     std::unique_ptr<ChorusEffect> chorusEffect;
+
+    //system to manage oscilloscope visualisation
+    std::vector<float> oscilloscopeBuffer;
+
+    //variables governing oscilloscope
+    bool oscilloscopeEnabled;
+    int oscilloscopeBufferSize;
 
     //vector structure to manage multiple effects at once
     std::vector<std::function<float(float)>> effectsChain;

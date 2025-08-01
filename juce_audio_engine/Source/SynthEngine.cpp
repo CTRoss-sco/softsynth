@@ -7,9 +7,15 @@
 #endif
 
 SynthEngine::SynthEngine() 
-    : cutoffFrequency(1000.0f), currentSampleRate(44100.0),
-      globalOsc1Waveform(WaveformType::SINE), globalOsc2Waveform(WaveformType::SINE),
-      globalDetune(0.0f), globalMix(0.5f), reverbEnabled(false) {
+    : cutoffFrequency(1000.0f),
+    currentSampleRate(44100.0),
+    globalOsc1Waveform(WaveformType::SINE),
+    globalOsc2Waveform(WaveformType::SINE),
+    globalDetune(0.0f),
+    globalMix(0.5f),
+    reverbEnabled(false),
+    oscilloscopeEnabled(false),
+    oscilloscopeBufferSize(512) {
 
     filter = std::make_unique<LowpassFilter>();
     filter->setSampleRate(44100.0);
@@ -300,7 +306,16 @@ void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
     }
     
     // Skip processing if no active voices
-    if (activeVoiceCount == 0) return;
+    if (activeVoiceCount == 0) {
+        
+        if (oscilloscopeEnabled) {
+            int captureSize = std::min(numSamples, oscilloscopeBufferSize);
+            for (int i = 0; i < captureSize; ++i) {
+                oscilloscopeBuffer[i] = 0.0f;
+            }
+        }
+        return;
+    }
     
     // Calculate polyphonic gain compensation
     float polyGain = 1.0f / std::sqrt(static_cast<float>(activeVoiceCount));
@@ -337,6 +352,11 @@ void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
         } else if (mixedSample < -0.95f) {
             mixedSample = -0.95f + 0.05f * std::tanh((mixedSample + 0.95f) / 0.05f);
         }
+
+        //Oscilloscope data capture
+        if (oscilloscopeEnabled && sample < oscilloscopeBufferSize) {
+            oscilloscopeBuffer[sample] = mixedSample;
+        }
         
         // Write to all output channels
         for (int channel = 0; channel < numChannels; ++channel) {
@@ -365,4 +385,24 @@ float SynthEngine::midiNoteToFrequency(int midiNote) {
     // A4 (MIDI note 69) = 440 Hz
     // Each semitone = 2^(1/12) frequency ratio
     return 440.0f * std::pow(2.0f, (midiNote - 69) / 12.0f);
+}
+
+void SynthEngine::enableOscilloscope(bool enable) {
+    oscilloscopeEnabled = enable;
+    if (enable) {
+        oscilloscopeBuffer.resize(oscilloscopeBufferSize);
+        std::fill(oscilloscopeBuffer.begin(), oscilloscopeBuffer.end(), 0.0f);
+        DBG("Oscilloscope enabled");
+    } else {
+        DBG("Oscilloscope disabled");
+    }
+}
+
+int SynthEngine::getWaveformData(float* buffer, int bufferSize) {
+    if (!oscilloscopeEnabled || !buffer) return 0;
+
+    int samplesAvailable = std::min(bufferSize, (int)oscilloscopeBuffer.size());
+    std::copy(oscilloscopeBuffer.begin(), oscilloscopeBuffer.begin() + samplesAvailable, buffer);
+
+    return samplesAvailable;
 }
