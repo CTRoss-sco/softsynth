@@ -4,11 +4,18 @@ import 'synth_engine.dart';
 
 // Oscillator control extensions for SynthEngine
 class OscillatorControls {
+
   // New dual oscillator function wrappers
   static late void Function(Pointer<Void>, int) _synthSetOsc1Waveform;
   static late void Function(Pointer<Void>, int) _synthSetOsc2Waveform;
   static late void Function(Pointer<Void>, double) _synthSetDetune;
   static late void Function(Pointer<Void>, double) _synthSetOscMix;
+
+  //oscillator getters
+  static late int Function(Pointer<Void>) _getOsc1Waveform;
+  static late int Function(Pointer<Void>) _getOsc2Waveform;
+  static late double Function(Pointer<Void>) _getDetune;
+  static late double Function(Pointer<Void>) _getMix;
 
   static bool _initialized = false;
 
@@ -32,6 +39,22 @@ class OscillatorControls {
       _synthSetOscMix = library
           .lookup<NativeFunction<Void Function(Pointer<Void>, Float)>>('synth_set_osc_mix')
           .asFunction<void Function(Pointer<Void>, double)>();
+
+      _getOsc1Waveform = library
+          .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_get_osc1_waveform')
+          .asFunction<int Function(Pointer<Void>)>();
+
+      _getOsc2Waveform = library
+          .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_get_osc2_waveform')
+          .asFunction<int Function(Pointer<Void>)>();
+
+      _getDetune = library
+          .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_detune')
+          .asFunction<double Function(Pointer<Void>)>();
+
+      _getMix = library
+          .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_osc_mix')
+          .asFunction<double Function(Pointer<Void>)>();
 
       _initialized = true;
       print('OscillatorControls initialized successfully');
@@ -66,7 +89,32 @@ class OscillatorControls {
     _synthSetOscMix(SynthEngine.synthHandle, mix);
     print('FFI: Oscillator mix set to $mix');
   }
+
+  static int getOsc1Waveform() {
+    if (!_initialized) return Waveforms.sine;
+    return _getOsc1Waveform(SynthEngine.synthHandle);
+  }
+
+  static int getOsc2Waveform() {
+    if (!_initialized) return Waveforms.sine;
+    return _getOsc2Waveform(SynthEngine.synthHandle);
+  }
+
+  static double getDetune() {
+    if (!_initialized) return 0.0;
+    return _getDetune(SynthEngine.synthHandle);
+  }
+
+  static double getMix() {
+    if (!_initialized) return 0.0;
+    return _getMix(SynthEngine.synthHandle);
+  }
 }
+
+  
+
+
+
 
 // Waveform constants and utilities
 class Waveforms {

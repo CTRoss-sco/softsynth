@@ -60,3 +60,19 @@ void ReverbEffect::setParameter(int paramId, float value) {
 bool ReverbEffect::isActive() const {
     return wetLevel > 0.0f;
 }
+
+float ReverbEffect::getRoomSize() const {
+    return roomSize;
+}
+
+float ReverbEffect::getDamping() const {
+    return damping;
+}
+
+float ReverbEffect::getWetLevel() const {
+    return wetLevel;
+}
+
+float ReverbEffect::getDryLevel() const {
+    return dryLevel;
+}

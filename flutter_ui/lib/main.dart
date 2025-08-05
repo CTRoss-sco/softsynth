@@ -5,8 +5,19 @@ import 'oscillator_controls.dart';
 import 'effects_controls.dart';
 import 'effects_engine.dart';
 import 'oscilloscope_controls.dart';
+import 'firebase/firebase_init.dart';
+import 'firebase/auth_service.dart';
+import 'login_screen.dart';
+import 'firestore/preset_service.dart';
+import 'firestore/preset_model.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await FirebaseService.initialize();
+
+  await SynthEngine.initialize();
+
   runApp(const SynthApp());
 }
 
@@ -21,8 +32,52 @@ class SynthApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const SynthMainScreen(),
+      home: const AuthWrapper(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: AuthService.authStateChanges,
+      builder: (context, snapshot) {
+        // Show loading while checking auth state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1a1a1a),
+                    Color(0xFF2d2d2d),
+                    Color(0xFF1a1a1a),
+                  ],
+                ),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+                ),
+              ),
+            ),
+          );
+        }
+        
+        // If user is signed in, show synth screen
+        if (snapshot.hasData && snapshot.data != null) {
+          return const SynthMainScreen();
+        }
+        
+        // Otherwise, show login screen
+        return const LoginScreen();
+      },
     );
   }
 }
@@ -205,6 +260,47 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
           title: const Text('Synth App', style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.black,
           elevation: 0,
+          actions: [
+            if (AuthService.isSignedIn) ...[
+              //Save Preset Button
+              IconButton(
+                icon: const Icon(Icons.save, color: Colors.deepOrange),
+                onPressed: _showSavePresetDialog,
+                tooltip: 'Save Current Preset',
+              ),
+              
+              //Load Preset Button  
+              IconButton(
+                icon: const Icon(Icons.folder_open, color: Colors.deepOrange),
+                onPressed: _showLoadPresetDialog,
+                tooltip: 'Load Preset',
+              ),
+              
+              // User greeting
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Center(
+                  child: Text(
+                    'Hello, ${AuthService.currentUser?.displayName ?? AuthService.currentUser?.email?.split('@')[0] ?? 'User'}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+              
+              //Logout Button
+              IconButton(
+                icon: const Icon(Icons.logout, color: Colors.deepOrange),
+                onPressed: () async {
+                  await AuthService.signOut();
+                  // AuthWrapper will automatically redirect to login
+                },
+                tooltip: 'Sign Out',
+              ),
+            ],
+          ]
         ),
         body: Column(
           children: [
@@ -294,6 +390,193 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
       onNoteReleased: _onNoteReleased,
       pressedNotes: _pressedMidiNotes,
       baseOctave: _baseOctave,
+    );
+  }
+  
+  void _showSavePresetDialog() {
+    if (!AuthService.isSignedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in to save presets')),
+      );
+      return;
+    }
+
+    final TextEditingController nameController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[850],
+        title: const Text('Save Preset', style: TextStyle(color: Colors.white)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Enter a name for your preset:',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: nameController,
+              autofocus: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'My Awesome Preset',
+                hintStyle: TextStyle(color: Colors.grey[400]),
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[600]!),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.deepOrange),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isEmpty) return;
+              
+              try {
+                Navigator.pop(context);
+                await PresetService.savePreset(name);
+                
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Preset "$name" saved successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to save preset: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepOrange,
+            ),
+            child: const Text('Save', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLoadPresetDialog() {
+    if (!AuthService.isSignedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in to load presets')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[850],
+        title: const Text('Load Preset', style: TextStyle(color: Colors.white)),
+        content: Container(
+          width: double.maxFinite,
+          height: 400,
+          child: FutureBuilder<List<PresetModel>>(
+            future: PresetService.getUserPresets(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.deepOrange),
+                );
+              }
+              
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error loading presets: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+              
+              final presets = snapshot.data ?? [];
+              
+              if (presets.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No presets saved yet.\nCreate your first preset!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                );
+              }
+              
+              return ListView.builder(
+                itemCount: presets.length,
+                itemBuilder: (context, index) {
+                  final preset = presets[index];
+                  return Card(
+                    color: Colors.grey[800],
+                    child: ListTile(
+                      leading: const Icon(Icons.library_music, color: Colors.deepOrange),
+                      title: Text(
+                        preset.name,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Created: ${preset.createdAt.day}/${preset.createdAt.month}/${preset.createdAt.year}',
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                      onTap: () async {
+                        try {
+                          Navigator.pop(context);
+                          await PresetService.loadPreset(preset);
+                          
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Preset "${preset.name}" loaded successfully!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to load preset: $e'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close', style: TextStyle(color: Colors.grey)),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -154,6 +154,35 @@ void ChorusEffect::setEnabled(bool enable) {
     enabled = enable; // Same as DelayEffect
 }
 
+//getter methods for chorus effect parameters
+float ChorusEffect::getRate() const {
+    return rate;
+}
+
+float ChorusEffect::getDepth() const {
+    return depth;
+}
+
+int ChorusEffect::getVoices() const {
+    return static_cast<int>(voices.size());
+}
+
+float ChorusEffect::getFeedback() const {
+    return feedback;
+}
+
+float ChorusEffect::getWetLevel() const {
+    return wetLevel;
+}
+
+float ChorusEffect::getDryLevel() const {
+    return dryLevel;
+}
+
+bool ChorusEffect::isChorusEnabled() const {
+    return enabled;
+}
+
 float ChorusEffect::generateLFO(float phase) {
     // Simple sine wave LFO (pure C++ math)
     return std::sin(phase);

@@ -45,6 +45,33 @@ class SynthEngine {
   static late void Function(Pointer<Void>, int) _enableOscilloscope;
   static late int Function(Pointer<Void>, Pointer<Float>, int) _getWaveformData;
 
+  //filter getters
+  static late double Function(Pointer<Void>) _getCutoff;
+  static late double Function(Pointer<Void>) _getResonance;
+
+  // Reverb getters
+  static late int Function(Pointer<Void>) _isReverbEnabled;
+  static late double Function(Pointer<Void>) _getReverbRoomSize;
+  static late double Function(Pointer<Void>) _getReverbDamping;
+  static late double Function(Pointer<Void>) _getReverbWetLevel;
+  static late double Function(Pointer<Void>) _getReverbDryLevel;
+
+  // Delay getters
+  static late int Function(Pointer<Void>) _isDelayEnabled;
+  static late double Function(Pointer<Void>) _getDelayTime;
+  static late double Function(Pointer<Void>) _getDelayFeedback;
+  static late double Function(Pointer<Void>) _getDelayWetLevel;
+  static late double Function(Pointer<Void>) _getDelayDryLevel;
+
+  // Chorus getters
+  static late int Function(Pointer<Void>) _isChorusEnabled;
+  static late double Function(Pointer<Void>) _getChorusRate;
+  static late double Function(Pointer<Void>) _getChorusDepth;
+  static late int Function(Pointer<Void>) _getChorusVoices;
+  static late double Function(Pointer<Void>) _getChorusFeedback;
+  static late double Function(Pointer<Void>) _getChorusWetLevel;
+  static late double Function(Pointer<Void>) _getChorusDryLevel;
+
   static bool _initialized = false;
 
   static bool initialize() {
@@ -237,6 +264,85 @@ class SynthEngine {
           .lookup<NativeFunction<Int32 Function(Pointer<Void>, Pointer<Float>, Int32)>>('synth_get_waveform_data')
           .asFunction<int Function(Pointer<Void>, Pointer<Float>, int)>();
       print('Found synth_get_waveform_data');
+
+      _getCutoff = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_filter_cutoff') 
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getResonance = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_filter_resonance') 
+        .asFunction<double Function(Pointer<Void>)>();
+
+      // Reverb getters
+      _isReverbEnabled = _library
+        .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_is_reverb_enabled')
+        .asFunction<int Function(Pointer<Void>)>();
+
+      _getReverbRoomSize = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_reverb_room_size')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getReverbDamping = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_reverb_damping')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getReverbWetLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_reverb_wet_level')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getReverbDryLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_reverb_dry_level')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      // Delay getters
+      _isDelayEnabled = _library
+        .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_is_delay_enabled')
+        .asFunction<int Function(Pointer<Void>)>();
+
+      _getDelayTime = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_delay_time')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getDelayFeedback = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_delay_feedback')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getDelayWetLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_delay_wet_level')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getDelayDryLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_delay_dry_level')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      // Chorus getters
+      _isChorusEnabled = _library
+        .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_is_chorus_enabled')
+        .asFunction<int Function(Pointer<Void>)>();
+
+      _getChorusRate = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_chorus_rate')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getChorusDepth = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_chorus_depth')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getChorusVoices = _library
+        .lookup<NativeFunction<Int32 Function(Pointer<Void>)>>('synth_get_chorus_voices')
+        .asFunction<int Function(Pointer<Void>)>();
+
+      _getChorusFeedback = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_chorus_feedback')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getChorusWetLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_chorus_wet_level')
+        .asFunction<double Function(Pointer<Void>)>();
+
+      _getChorusDryLevel = _library
+        .lookup<NativeFunction<Float Function(Pointer<Void>)>>('synth_get_chorus_dry_level')
+        .asFunction<double Function(Pointer<Void>)>();
 
       // Create synth instance
       print('Creating synth instance...');
@@ -431,6 +537,104 @@ static List<double> getWaveformData() {
   } finally {
     calloc.free(buffer);
   }
+}
+
+static double getCutoff() {
+  if (!_initialized) return 1000.0;
+  return _getCutoff(_synthInstance);
+}
+
+static double getResonance() {
+  if (!_initialized) return 1.0;
+  return _getResonance(_synthInstance);
+}
+
+// Reverb getters
+static bool isReverbEnabled() {
+  if (!_initialized) return false;
+  return _isReverbEnabled(_synthInstance) == 1;
+}
+
+static double getReverbRoomSize() {
+  if (!_initialized) return 0.5;
+  return _getReverbRoomSize(_synthInstance);
+}
+
+static double getReverbDamping() {
+  if (!_initialized) return 0.5;
+  return _getReverbDamping(_synthInstance);
+}
+
+static double getReverbWetLevel() {
+  if (!_initialized) return 0.3;
+  return _getReverbWetLevel(_synthInstance);
+}
+
+static double getReverbDryLevel() {
+  if (!_initialized) return 0.7;
+  return _getReverbDryLevel(_synthInstance);
+}
+
+// Delay getters
+static bool isDelayEnabled() {
+  if (!_initialized) return false;
+  return _isDelayEnabled(_synthInstance) == 1;
+}
+
+static double getDelayTime() {
+  if (!_initialized) return 0.3;
+  return _getDelayTime(_synthInstance);
+}
+
+static double getDelayFeedback() {
+  if (!_initialized) return 0.3;
+  return _getDelayFeedback(_synthInstance);
+}
+
+static double getDelayWetLevel() {
+  if (!_initialized) return 0.3;
+  return _getDelayWetLevel(_synthInstance);
+}
+
+static double getDelayDryLevel() {
+  if (!_initialized) return 0.7;
+  return _getDelayDryLevel(_synthInstance);
+}
+
+// Chorus getters
+static bool isChorusEnabled() {
+  if (!_initialized) return false;
+  return _isChorusEnabled(_synthInstance) == 1;
+}
+
+static double getChorusRate() {
+  if (!_initialized) return 1.5;
+  return _getChorusRate(_synthInstance);
+}
+
+static double getChorusDepth() {
+  if (!_initialized) return 0.4;
+  return _getChorusDepth(_synthInstance);
+}
+
+static int getChorusVoices() {
+  if (!_initialized) return 2;
+  return _getChorusVoices(_synthInstance);
+}
+
+static double getChorusFeedback() {
+  if (!_initialized) return 0.2;
+  return _getChorusFeedback(_synthInstance);
+}
+
+static double getChorusWetLevel() {
+  if (!_initialized) return 0.5;
+  return _getChorusWetLevel(_synthInstance);
+}
+
+static double getChorusDryLevel() {
+  if (!_initialized) return 0.8;
+  return _getChorusDryLevel(_synthInstance);
 }
 
   // Add these getters for OscillatorControls to access

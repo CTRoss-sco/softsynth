@@ -192,4 +192,124 @@ int synth_get_waveform_data(SynthEngineHandle* handle, float* buffer, int buffer
 
     return samplesReturned;
 }
+
+// Oscillator getter controls
+int synth_get_osc1_waveform(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0;
+    return static_cast<int>(handle->engine->getOsc1Waveform());
+}
+
+int synth_get_osc2_waveform(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0;
+    return static_cast<int>(handle->engine->getOsc2Waveform());
+}
+
+float synth_get_detune(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.0f;
+    return handle->engine->getDetune();
+}
+
+float synth_get_osc_mix(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.0f;
+    return handle->engine->getOscMix();
+}
+
+// Filter getter controls
+float synth_get_filter_cutoff(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 1000.0f;
+    return handle->engine->getCutoff();
+}
+
+float synth_get_filter_resonance(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 1.0f;
+    return handle->engine->getResonance();
+}
+
+// Reverb effect getter controls
+int synth_is_reverb_enabled(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0;
+    return handle->engine->isReverbEnabled() ? 1 : 0;
+}
+
+float synth_get_reverb_room_size(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.5f;
+    return handle->engine->getReverbRoomSize();
+}
+
+float synth_get_reverb_damping(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.5f;
+    return handle->engine->getReverbDamping();
+}
+
+float synth_get_reverb_wet_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.3f;
+    return handle->engine->getReverbWetLevel();
+}
+
+float synth_get_reverb_dry_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.7f;
+    return handle->engine->getReverbDryLevel();
+}
+
+// Delay effect getter controls
+int synth_is_delay_enabled(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0;
+    return handle->engine->isDelayEnabled() ? 1 : 0;
+}
+
+float synth_get_delay_time(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.3f;
+    return handle->engine->getDelayTime();
+}
+
+float synth_get_delay_feedback(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.3f;
+    return handle->engine->getDelayFeedback();
+}
+
+float synth_get_delay_wet_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.3f;
+    return handle->engine->getDelayWetLevel();
+}
+
+float synth_get_delay_dry_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.7f;
+    return handle->engine->getDelayDryLevel();
+}
+
+// Chorus effect getter controls
+int synth_is_chorus_enabled(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0;
+    return handle->engine->isChorusEnabled() ? 1 : 0;
+}
+
+float synth_get_chorus_rate(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 1.5f;
+    return handle->engine->getChorusRate();
+}
+
+float synth_get_chorus_depth(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.4f;
+    return handle->engine->getChorusDepth();
+}
+
+int synth_get_chorus_voices(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 2;
+    return handle->engine->getChorusVoices();
+}
+
+float synth_get_chorus_feedback(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.2f;
+    return handle->engine->getChorusFeedback();
+}
+
+float synth_get_chorus_wet_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.5f;
+    return handle->engine->getChorusWetLevel();
+}
+
+float synth_get_chorus_dry_level(SynthEngineHandle* handle) {
+    if (!handle || !handle->engine) return 0.8f;
+    return handle->engine->getChorusDryLevel();
+}
 }

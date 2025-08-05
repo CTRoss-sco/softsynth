@@ -44,3 +44,11 @@ float LowpassFilter::processSample(float sample) {
     
     return z2;
 }
+
+float LowpassFilter::getCutoff() const {
+    return cutoff;
+}
+
+float LowpassFilter::getResonance() const {
+    return resonance;
+}

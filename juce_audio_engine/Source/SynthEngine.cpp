@@ -230,6 +230,152 @@ void SynthEngine::setChorusDryLevel(float dryLevel) {
     }
 }
 
+//getter methods for oscillator parameters
+WaveformType SynthEngine::getOsc1Waveform() const {
+    return globalOsc1Waveform;
+}
+
+WaveformType SynthEngine::getOsc2Waveform() const {
+    return globalOsc2Waveform;
+}
+
+float SynthEngine::getDetune() const {
+    return globalDetune;
+}
+
+float SynthEngine::getOscMix() const {
+    return globalMix;
+}
+
+//low pass filter getter methods
+float SynthEngine::getCutoff() const {
+    return cutoffFrequency;
+}
+
+float SynthEngine::getResonance() const {
+    if (filter) {
+        return filter->getResonance();
+    }
+    return 1.0f; //returns default resonance if alternate value not set
+}
+
+//reverb getter methods
+bool SynthEngine::isReverbEnabled() const {
+    return reverbEnabled;
+}
+
+float SynthEngine::getReverbRoomSize() const {
+    if (reverbEffect) {
+        return reverbEffect->getRoomSize();
+    }
+    return 0.5f; // Default value
+}
+
+float SynthEngine::getReverbDamping() const {
+    if (reverbEffect) {
+        return reverbEffect->getDamping();
+    }
+    return 0.5f; // Default value
+}
+
+float SynthEngine::getReverbWetLevel() const {
+    if (reverbEffect) {
+        return reverbEffect->getWetLevel();
+    }
+    return 0.3f; // Default value
+}
+
+float SynthEngine::getReverbDryLevel() const {
+    if (reverbEffect) {
+        return reverbEffect->getDryLevel();
+    }
+    return 0.7f; // Default value
+}
+
+bool SynthEngine::isDelayEnabled() const {
+    if (delayEffect) {
+        return delayEffect->isActive();
+    }
+    return false;
+}
+
+float SynthEngine::getDelayTime() const {
+    if (delayEffect) {
+        return delayEffect->getDelayTime();
+    }
+    return 0.3f; // Default value
+}
+
+float SynthEngine::getDelayFeedback() const {
+    if (delayEffect) {
+        return delayEffect->getFeedback();
+    }
+    return 0.3f; // Default value
+}
+
+float SynthEngine::getDelayWetLevel() const {
+    if (delayEffect) {
+        return delayEffect->getWetLevel();
+    }
+    return 0.3f; // Default value
+}
+
+float SynthEngine::getDelayDryLevel() const {
+    if (delayEffect) {
+        return delayEffect->getDryLevel();
+    }
+    return 0.7f; // Default value
+}
+
+bool SynthEngine::isChorusEnabled() const {
+    if (chorusEffect) {
+        return chorusEffect->isActive();
+    }
+    return false;
+}
+
+float SynthEngine::getChorusRate() const {
+    if (chorusEffect) {
+        return chorusEffect->getRate();
+    }
+    return 1.5f; // Default value
+}
+
+float SynthEngine::getChorusDepth() const {
+    if (chorusEffect) {
+        return chorusEffect->getDepth();
+    }
+    return 0.4f; // Default value
+}
+
+int SynthEngine::getChorusVoices() const {
+    if (chorusEffect) {
+        return chorusEffect->getVoices();
+    }
+    return 2; // Default value
+}
+
+float SynthEngine::getChorusFeedback() const {
+    if (chorusEffect) {
+        return chorusEffect->getFeedback();
+    }
+    return 0.2f; // Default value
+}
+
+float SynthEngine::getChorusWetLevel() const {
+    if (chorusEffect) {
+        return chorusEffect->getWetLevel();
+    }
+    return 0.5f; // Default value
+}
+
+float SynthEngine::getChorusDryLevel() const {
+    if (chorusEffect) {
+        return chorusEffect->getDryLevel();
+    }
+    return 0.8f; // Default value
+}
+
 void SynthEngine::rebuildEffectsChain() {
     effectsChain.clear();
     

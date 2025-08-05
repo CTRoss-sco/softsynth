@@ -28,33 +28,33 @@ SYNTHFFI_API void synth_note_on(SynthEngineHandle* handle, int note, float veloc
 SYNTHFFI_API void synth_note_off(SynthEngineHandle* handle, int note);
 SYNTHFFI_API void synth_process_audio(SynthEngineHandle* handle, float* buffer, int frames);
 
-// New dual oscillator controls
+// oscillator setter controls
 SYNTHFFI_API void synth_set_osc1_waveform(SynthEngineHandle* handle, int waveform);
 SYNTHFFI_API void synth_set_osc2_waveform(SynthEngineHandle* handle, int waveform);
 SYNTHFFI_API void synth_set_detune(SynthEngineHandle* handle, float cents);
 SYNTHFFI_API void synth_set_osc_mix(SynthEngineHandle* handle, float mix);
 
-// Filter controls
+// filter setter controls
 SYNTHFFI_API void synth_set_filter_cutoff(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_filter_resonance(SynthEngineHandle* handle, float value);
 
 // Effects processing control
 SYNTHFFI_API void synth_enable_effects_processing(SynthEngineHandle* handle, bool enable);
 
-// Reverb effect control
+// Reverb effect setter controls
 SYNTHFFI_API void synth_set_reverb_room_size(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_damping(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_wet_level(SynthEngineHandle* handle, float value);
 SYNTHFFI_API void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value);
 
-// Delay effect control
+// Delay effect setter control
 SYNTHFFI_API void synth_enable_delay(SynthEngineHandle* handle, int enable);
 SYNTHFFI_API void synth_set_delay_time(SynthEngineHandle* handle, float timeInSeconds);
 SYNTHFFI_API void synth_set_delay_feedback(SynthEngineHandle* handle, float feedback);
 SYNTHFFI_API void synth_set_delay_wet_level(SynthEngineHandle* handle, float wetLevel);
 SYNTHFFI_API void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel);
 
-// Chorus effect controls
+// Chorus effect setter controls
 SYNTHFFI_API void synth_enable_chorus(SynthEngineHandle* handle, int enable);
 SYNTHFFI_API void synth_set_chorus_rate(SynthEngineHandle* handle, float rate);
 SYNTHFFI_API void synth_set_chorus_depth(SynthEngineHandle* handle, float depth);
@@ -66,6 +66,39 @@ SYNTHFFI_API void synth_set_chorus_dry_level(SynthEngineHandle* handle, float dr
 //Oscilloscope functions
 SYNTHFFI_API void synth_enable_oscilloscope(SynthEngineHandle* handle, int enable);
 SYNTHFFI_API int synth_get_waveform_data(SynthEngineHandle* handle, float* buffer, int bufferSize);
+
+//Oscillator getter controls
+SYNTHFFI_API int synth_get_osc1_waveform(SynthEngineHandle* handle);
+SYNTHFFI_API int synth_get_osc2_waveform(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_detune(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_osc_mix(SynthEngineHandle* handle);
+
+//filter getter controls
+SYNTHFFI_API float synth_get_filter_cutoff(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_filter_resonance(SynthEngineHandle* handle);
+
+//reverb effect getter controls
+SYNTHFFI_API int synth_is_reverb_enabled(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_reverb_room_size(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_reverb_damping(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_reverb_wet_level(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_reverb_dry_level(SynthEngineHandle* handle);
+
+//delay effect getter controls
+SYNTHFFI_API int synth_is_delay_enabled(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_delay_time(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_delay_feedback(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_delay_wet_level(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_delay_dry_level(SynthEngineHandle* handle);
+
+//chorus effect getter controls
+SYNTHFFI_API int synth_is_chorus_enabled(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_chorus_rate(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_chorus_depth(SynthEngineHandle* handle);
+SYNTHFFI_API int synth_get_chorus_voices(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_chorus_feedback(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_chorus_wet_level(SynthEngineHandle* handle);
+SYNTHFFI_API float synth_get_chorus_dry_level(SynthEngineHandle* handle);
 
 #ifdef __cplusplus
 }

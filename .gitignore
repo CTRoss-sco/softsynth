@@ -51,3 +51,6 @@ node_modules/
 # Temporary files
 *.tmp
 *.temp
+
+# Firebase environment variables
+.env

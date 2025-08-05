@@ -47,7 +47,7 @@ public:
     void setParameter(int paramId, float value) override;
     bool isActive() const override;
 
-    //Methods specific to ChorusEffect only
+    //setter methods for chorus effect parameters
     void setRate(float rateHz);
     void setDepth(float depth);
     void setVoices(int numVoices);
@@ -55,5 +55,14 @@ public:
     void setWetLevel(float wet);
     void setDryLevel(float dry);
     void setEnabled(bool enable);
+
+    //getter methods for chorus effect parameters
+    float getRate() const;
+    float getDepth() const;
+    int getVoices() const;
+    float getFeedback() const;
+    float getWetLevel() const;
+    float getDryLevel() const;
+    bool isChorusEnabled() const;
 
 };

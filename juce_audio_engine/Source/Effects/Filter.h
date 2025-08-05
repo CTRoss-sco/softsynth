@@ -17,8 +17,12 @@ public:
     void setSampleRate(double sr) override;
     void reset() override;
     
-    // Filter-specific methods
+    //filter setter methods
     void setCutoff(float freq);
     void setResonance(float q);
+
+    //filter getter methods
+    float getCutoff() const;
+    float getResonance() const;
 };
 

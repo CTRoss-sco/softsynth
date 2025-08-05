@@ -37,4 +37,10 @@ public:
     void reset() override;
     void setParameter(int paramId, float value) override;
     bool isActive() const override;
+
+    //getter methods for reverb parameters
+    float getRoomSize() const;
+    float getDamping() const;
+    float getWetLevel() const;
+    float getDryLevel() const;
 };

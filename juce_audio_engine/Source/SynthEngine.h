@@ -34,7 +34,7 @@ public:
     void noteOn(int midiNote, float velocity);
     void noteOff(int midiNote);
     
-    // New dual oscillator controls
+    // dual oscillator setter controls
     void setOsc1Waveform(WaveformType type);
     void setOsc2Waveform(WaveformType type);
     void setDetune(float cents);
@@ -45,18 +45,18 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
-    //reverb effect controls
+    //reverb effect setter controls
     void enableReverb(bool enable);
     void setReverbParameter(int paramId, float value);
 
-    //delay effect controls
+    //delay effect setter controls
     void enableDelay(bool enable);
     void setDelayTime(float timeInSeconds);
     void setDelayFeedback(float feedback);
     void setDelayWetLevel(float wet);
     void setDelayDryLevel(float dry);
 
-    //chorus effect controls
+    //chorus effect setter controls
     void enableChorus(bool enable);
     void setChorusRate(float rate);
     void setChorusDepth(float depth);
@@ -68,6 +68,39 @@ public:
     //methods to managed oscilloscope visualisation
     void enableOscilloscope(bool enable);
     int getWaveformData(float* buffer, int bufferSize);
+
+    //getter methods for oscillator parameters
+    WaveformType getOsc1Waveform() const;
+    WaveformType getOsc2Waveform() const;
+    float getDetune() const;
+    float getOscMix() const;
+
+    //low pass filter getter methods
+    float getCutoff() const;
+    float getResonance() const;
+
+    //reverb effect getter methods
+    bool isReverbEnabled() const;
+    float getReverbRoomSize() const;
+    float getReverbDamping() const;
+    float getReverbWetLevel() const;
+    float getReverbDryLevel() const;
+
+    //delay effect getter methods
+    bool isDelayEnabled() const;
+    float getDelayTime() const;
+    float getDelayFeedback() const;
+    float getDelayWetLevel() const;
+    float getDelayDryLevel() const;
+
+    //chorus effect getter methods
+    bool isChorusEnabled() const;
+    float getChorusRate() const;
+    float getChorusDepth() const;
+    int getChorusVoices() const;
+    float getChorusFeedback() const;
+    float getChorusWetLevel() const;
+    float getChorusDryLevel() const;
 
 private:
     // Replace simple Voice with DualOscVoice
