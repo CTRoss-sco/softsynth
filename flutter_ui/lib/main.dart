@@ -10,6 +10,7 @@ import 'firebase/auth_service.dart';
 import 'login_screen.dart';
 import 'firestore/preset_service.dart';
 import 'firestore/preset_model.dart';
+import 'consent_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,7 @@ class SynthApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const AuthWrapper(),
+      home: const ConsentScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -302,7 +303,14 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
             ],
           ]
         ),
-        body: Column(
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            
+            final scale = (constraints.maxWidth / 1200.0).clamp(0.7, 1.0);
+            
+            return Transform.scale(
+              scale: scale,
+              child: Column(
           children: [
             // Top section - 3-column synthesizer layout
             if (synthInitialized)
@@ -320,15 +328,15 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                       
                       const SizedBox(width: 12),
                       
-                      // Middle column - Effects rack (NEW!)
+                      // Middle column Effects rack
                       Expanded(
                         flex: 1,
-                        child: const EffectsControls(), // Your new effects widget
+                        child: const EffectsControls(), 
                       ),
                       
                       const SizedBox(width: 12),
                       
-                      // Right column - Future oscilloscope
+                      // Right column Oscilloscope 
                       Expanded(
                         flex: 1,
                         child: OscilloscopeControls(),
@@ -379,6 +387,9 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                     ),
             ),
           ],
+        ),
+      );
+          },
         ),
       ),
     );

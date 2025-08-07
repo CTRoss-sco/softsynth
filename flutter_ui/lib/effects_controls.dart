@@ -23,7 +23,7 @@ class _EffectsControlsState extends State<EffectsControls>
   double _reverbDamping = 0.5;
   double _reverbWetLevel = 0.5;
   double _reverbDryLevel = 0.5;
-  bool _reverbEnabled = true;
+  bool _reverbEnabled = false;
 
   //delay state variables
   double _delayTime = 0.25;
@@ -210,7 +210,7 @@ class _EffectsControlsState extends State<EffectsControls>
   }
 
   Widget _buildReverbTab() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,7 +370,7 @@ class _EffectsControlsState extends State<EffectsControls>
   }
 
   Widget _buildDelayTab() {
-  return Padding(
+  return SingleChildScrollView(
     padding: const EdgeInsets.all(16.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +530,7 @@ class _EffectsControlsState extends State<EffectsControls>
 }
 
 Widget _buildChorusTab() {
-  return Padding(
+  return SingleChildScrollView(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
