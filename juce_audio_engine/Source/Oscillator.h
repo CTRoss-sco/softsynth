@@ -29,7 +29,7 @@ private:
     float generateWaveform(float phase);
 };
 
-// Dual oscillator voice for polyphonic synthesis
+
 class DualOscVoice {
 public:
     DualOscVoice();
@@ -41,17 +41,17 @@ public:
     // Oscillator controls
     void setOsc1Waveform(WaveformType type);
     void setOsc2Waveform(WaveformType type);
-    void setDetune(float cents);        // -100 to +100 cents
-    void setMix(float mixLevel);        // 0.0 = osc1 only, 1.0 = osc2 only
+    void setDetune(float cents);        
+    void setMix(float mixLevel);        
     
     bool isActive() const { return active; }
     
 private:
     Oscillator osc1, osc2;
     float velocity;
-    float detune;           // Detune in cents
-    float mix;              // Oscillator mix level
+    float detune;           
+    float mix;              
     bool active;
     
-    float centsToRatio(float cents);    // Convert cents to frequency ratio
+    float centsToRatio(float cents);    
 };

@@ -6,6 +6,15 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+/*
+Class to represent the main synthesis engine,
+handling both oscillators, the filter, and effects.
+*/
+
+/*
+Constructor for the SynthEngine class, that also instantiates
+the other effect and filter components.
+*/
 SynthEngine::SynthEngine() 
     : cutoffFrequency(1000.0f),
     currentSampleRate(44100.0),
@@ -35,22 +44,23 @@ SynthEngine::~SynthEngine() {
     std::cout << "SynthEngine destroyed" << std::endl;
 }
 
+/*
+Method to initialise the audio settings and specify the number
+of audio device outputs (2 is used for stereo output).
+*/
 bool SynthEngine::initializeAudio() {
-    // Initialize the audio device manager with default settings
-    auto result = audioDeviceManager.initialiseWithDefaultDevices(0, 2); // 0 inputs, 2 outputs
+    auto result = audioDeviceManager.initialiseWithDefaultDevices(0, 2); 
     
     if (result.isNotEmpty()) {
         std::cout << "Failed to initialize audio: " << result.toStdString() << std::endl;
         return false;
     }
     
-    // Set up the audio source player
     audioSourcePlayer.setSource(this);
     audioDeviceManager.addAudioCallback(&audioSourcePlayer);
     
     std::cout << "Audio initialized successfully" << std::endl;
     
-    // Print current audio device info
     auto* currentDevice = audioDeviceManager.getCurrentAudioDevice();
     if (currentDevice != nullptr) {
         std::cout << "Using audio device: " << currentDevice->getName().toStdString() << std::endl;
@@ -79,7 +89,12 @@ void SynthEngine::setResonance(float value) {
         filter->setResonance(value);
     }
 }
-
+/*
+Method to add a new note being played to the sound. Takes
+in a MIDI note number and a velocity value representing
+how hard the note was pressed. In the current iteration of
+the application, velocity is fixed across all input types.
+*/
 void SynthEngine::noteOn(int midiNote, float velocity) {
     float frequency = midiNoteToFrequency(midiNote);
     
@@ -98,6 +113,12 @@ void SynthEngine::noteOn(int midiNote, float velocity) {
     std::cout << "Note ON: " << midiNote << " (freq: " << frequency << "Hz)" << std::endl;
 }
 
+/*
+Method that stops a note from playing when the key is not being 
+pressed anymore. Takes in an integer parameter representing the
+MIDI note value of the note, which is used to find the corresponding
+note in activeVoices.
+*/
 void SynthEngine::noteOff(int midiNote) {
     auto it = activeVoices.find(midiNote);
     if (it != activeVoices.end()) {
@@ -106,10 +127,10 @@ void SynthEngine::noteOff(int midiNote) {
     }
 }
 
-// New dual oscillator controls
+
 void SynthEngine::setOsc1Waveform(WaveformType type) {
     globalOsc1Waveform = type;
-    // Apply to all active voices
+    // Applies to all active notes
     for (auto& voice : activeVoices) {
         voice.second.setOsc1Waveform(type);
     }
@@ -117,7 +138,7 @@ void SynthEngine::setOsc1Waveform(WaveformType type) {
 
 void SynthEngine::setOsc2Waveform(WaveformType type) {
     globalOsc2Waveform = type;
-    // Apply to all active voices
+    // Applies to all active notes
     for (auto& voice : activeVoices) {
         voice.second.setOsc2Waveform(type);
     }
@@ -125,7 +146,7 @@ void SynthEngine::setOsc2Waveform(WaveformType type) {
 
 void SynthEngine::setDetune(float cents) {
     globalDetune = cents;
-    // Apply to all active voices
+    // Applies to all active notes
     for (auto& voice : activeVoices) {
         voice.second.setDetune(cents);
     }
@@ -133,7 +154,7 @@ void SynthEngine::setDetune(float cents) {
 
 void SynthEngine::setOscMix(float mix) {
     globalMix = mix;
-    // Apply to all active voices
+    // Applies to all active notes
     for (auto& voice : activeVoices) {
         voice.second.setMix(mix);
     }
@@ -230,7 +251,7 @@ void SynthEngine::setChorusDryLevel(float dryLevel) {
     }
 }
 
-//getter methods for oscillator parameters
+//getter methods for oscillators
 WaveformType SynthEngine::getOsc1Waveform() const {
     return globalOsc1Waveform;
 }
@@ -376,6 +397,10 @@ float SynthEngine::getChorusDryLevel() const {
     return 0.8f; // Default value
 }
 
+/*
+Method to manage the specific order of effects that are
+enabled at any one time. 
+*/
 void SynthEngine::rebuildEffectsChain() {
     effectsChain.clear();
     
@@ -405,6 +430,11 @@ void SynthEngine::rebuildEffectsChain() {
     
 }
 
+
+/*
+Method that manages the processing of audio samples through the
+effects chain.
+*/
 float SynthEngine::processEffectsChain(float sample) {
     // Process sample through each effect in the chain
     for (auto& effect : effectsChain) {
@@ -413,7 +443,11 @@ float SynthEngine::processEffectsChain(float sample) {
     return sample;
 }
 
-// AudioSource overrides
+/*
+Inherited method from JUCE's AudioSource class. Takes in a 
+sampleRate parameter and updates each component's sample rate 
+member variable for real-time audio processing. 
+*/
 void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
     currentSampleRate = sampleRate;
     if (filter) {
@@ -435,6 +469,12 @@ void SynthEngine::prepareToPlay(int samplesPerBlockExpected, double sampleRate) 
     std::cout << "Prepared to play: " << samplesPerBlockExpected << " samples at " << sampleRate << " Hz" << std::endl;
 }
 
+/*
+Inherited method from JUCE's AudioSource class. It is called for every audio
+block. This mixes all the active voices (notes), applies gain compensation for 
+multiple notes at once, processes through filter and effects, captures oscilloscope
+data and outputs audio in stereo format.
+*/
 void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) {
     // Clear the buffer first
     bufferToFill.clearActiveBufferRegion();
@@ -521,18 +561,32 @@ void SynthEngine::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
     }
 }
 
+/*
+Inherited method from JUCE's AudioSource class. Clears
+all active voices(notes) currently playing to prevent resource
+leaks.
+*/
 void SynthEngine::releaseResources() {
     // Clear all voices when audio stops
     activeVoices.clear();
     std::cout << "Audio resources released" << std::endl;
 }
 
+/*
+Helper method used to convert MIDI note numbers to frequencies.
+The value 440.0f is used as this corresponds to equal temperament tuning.
+*/
 float SynthEngine::midiNoteToFrequency(int midiNote) {
     // A4 (MIDI note 69) = 440 Hz
     // Each semitone = 2^(1/12) frequency ratio
     return 440.0f * std::pow(2.0f, (midiNote - 69) / 12.0f);
 }
 
+/*
+Enables and disables oscilloscope visualisation by setting
+oscilloscopeEnabled to true/false, and allocates a buffer to capture
+audio samples.
+*/
 void SynthEngine::enableOscilloscope(bool enable) {
     oscilloscopeEnabled = enable;
     if (enable) {
@@ -544,6 +598,12 @@ void SynthEngine::enableOscilloscope(bool enable) {
     }
 }
 
+/*
+Method to copy over the captured audio samples to an external buffer
+for the oscilloscope display. Takes in a pointer to the first element
+of the buffer where waveform data will be written and an integer value 
+representing the size of the buffer.
+*/
 int SynthEngine::getWaveformData(float* buffer, int bufferSize) {
     if (!oscilloscopeEnabled || !buffer) return 0;
 

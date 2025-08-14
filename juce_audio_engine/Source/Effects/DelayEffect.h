@@ -10,10 +10,10 @@ private:
     double sampleRate;
     
     // Parameters
-    float delayTime;        // 0.0 - 2.0 seconds
-    float feedback;         // 0.0 - 0.95 (prevent runaway)
-    float wetLevel;         // 0.0 - 1.0
-    float dryLevel;         // 0.0 - 1.0
+    float delayTime;        
+    float feedback;         
+    float wetLevel;         
+    float dryLevel;         
     bool enabled;
     
     int getDelayInSamples() const;
@@ -21,7 +21,7 @@ private:
 public:
     DelayEffect();
     
-    // Override Effect base class methods
+    // Method implementations that override the Effect base class methods
     float processSample(float sample) override;
     void setSampleRate(double sr) override;
     void reset() override;

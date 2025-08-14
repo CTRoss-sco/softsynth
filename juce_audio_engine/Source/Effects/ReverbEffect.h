@@ -4,7 +4,6 @@
 
 class ReverbEffect : public Effect {
 private:
-    // Simple delay line implementation
     struct DelayLine {
         std::vector<float> buffer;
         int writePos;
@@ -15,13 +14,16 @@ private:
         void clear();
     };
     
-    // Multiple delay lines for rich reverb (using prime numbers)
+    /*
+    DelayLines are initialised using prime numbers to simulate
+    natural reverb characteristics.
+    */ 
     DelayLine delay1{1051};
     DelayLine delay2{1399};
     DelayLine delay3{1777};
     DelayLine delay4{2003};
     
-    // Parameters
+    // Reverb Effect class member variables
     float roomSize;
     float damping;
     float wetLevel;
@@ -31,14 +33,14 @@ private:
 public:
     ReverbEffect();
     
-    // Override Effect base class methods
+    //Overrides the Effect base class methods
     float processSample(float sample) override;
     void setSampleRate(double sr) override;
     void reset() override;
     void setParameter(int paramId, float value) override;
     bool isActive() const override;
 
-    //getter methods for reverb parameters
+    //getter methods for reverb effect member variables
     float getRoomSize() const;
     float getDamping() const;
     float getWetLevel() const;

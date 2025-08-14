@@ -5,34 +5,48 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+/*
+A class to represent the Chorus effect that inherits
+from the base Effect class.
+*/
+
+/*
+Constructor for the ChorusEffect class, that also 
+creates two instances of the ChorusVoice struct upon
+initialisation.
+*/
 ChorusEffect::ChorusEffect()
     : sampleRate(44100.0)
-    , rate(1.5f)            // 1.5 Hz default
-    , depth(0.4f)           // 40% depth
-    , feedback(0.2f)        // 20% feedback
-    , wetLevel(0.5f)        // 50% wet
-    , dryLevel(0.8f)        // 80% dry
-    , enabled(false)        // Start disabled (same as DelayEffect)
+    , rate(1.5f)            
+    , depth(0.4f)           
+    , feedback(0.2f)        
+    , wetLevel(0.5f)        
+    , dryLevel(0.8f)        
+    , enabled(false)        
     , masterLfoPhase(0.0f)
 {
-    // Initialize with 2 voices by default
+    
     setVoices(2);
 }
 
+/*
+Main processing function that takes in an audio sample and returns 
+a mix of the original dry signal and processed chorus signal.
+*/
 float ChorusEffect::processSample(float sample) {
     if (!enabled || voices.empty()) {
-        return sample; // Bypass if disabled (same as DelayEffect)
+        return sample; //effect is bypassed if not enabled
     }
     
-    // Update master LFO phase
+    // Update master LFO phase (used with each voice)
     masterLfoPhase += (2.0f * static_cast<float>(M_PI) * rate) / static_cast<float>(sampleRate);
     if (masterLfoPhase >= 2.0f * static_cast<float>(M_PI)) {
         masterLfoPhase -= 2.0f * static_cast<float>(M_PI);
     }
     
-    float outputSample = sample * dryLevel; // Start with dry signal
+    float outputSample = sample * dryLevel; 
     
-    // Process each chorus voice
+    // Process each ChorusVoice struct
     for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
         auto& voice = voices[voiceIndex];
         
@@ -51,10 +65,10 @@ float ChorusEffect::processSample(float sample) {
         float modulationAmount = voice.baseDelayTime * depth * 0.5f;
         float modulatedDelay = voice.baseDelayTime + (lfoValue * modulationAmount);
         
-        // Clamp delay (same pattern as DelayEffect)
+        // Clamp delay
         int delayInSamples = static_cast<int>(std::clamp(modulatedDelay, 1.0f, static_cast<float>(voice.bufferSize - 1)));
         
-        // Calculate read position (same logic as DelayEffect)
+        // Calculate read position
         int readPosition = voice.writePosition - delayInSamples;
         if (readPosition < 0) {
             readPosition += voice.bufferSize;
@@ -63,10 +77,10 @@ float ChorusEffect::processSample(float sample) {
         // Read delayed sample
         float delayedSample = voice.delayBuffer[readPosition];
         
-        // Write new sample with feedback (same as DelayEffect)
+        // Write new sample with feedback
         voice.delayBuffer[voice.writePosition] = sample + (delayedSample * feedback);
         
-        // Advance write position (same as DelayEffect)
+        // Advance the write position
         voice.writePosition = (voice.writePosition + 1) % voice.bufferSize;
         
         // Add chorus voice to output
@@ -76,12 +90,15 @@ float ChorusEffect::processSample(float sample) {
     return outputSample;
 }
 
+/*
+Sets the sample rate to be used for the chorus and allocates a buffer for each
+voice. 
+*/
 void ChorusEffect::setSampleRate(double sr) {
     sampleRate = sr;
     
-    // Initialize all voice buffers (same pattern as DelayEffect)
     for (auto& voice : voices) {
-        voice.bufferSize = static_cast<int>(sampleRate * (MAX_DELAY_MS / 1000.0f) * 2); // Extra headroom
+        voice.bufferSize = static_cast<int>(sampleRate * (MAX_DELAY_MS / 1000.0f) * 2);
         voice.delayBuffer.resize(voice.bufferSize);
         voice.writePosition = 0;
     }
@@ -90,8 +107,12 @@ void ChorusEffect::setSampleRate(double sr) {
     reset();
 }
 
+/*
+Method to reset all buffers to zero (silence) and resets all phase values
+used for the Low Frequency Oscillator to zero. Used when audio stops or when
+user adjusts parameters to prevent old audio from bleeding through.
+*/
 void ChorusEffect::reset() {
-    // Same pattern as DelayEffect
     for (auto& voice : voices) {
         if (!voice.delayBuffer.empty()) {
             std::fill(voice.delayBuffer.begin(), voice.delayBuffer.end(), 0.0f);
@@ -102,8 +123,12 @@ void ChorusEffect::reset() {
     masterLfoPhase = 0.0f;
 }
 
+/*
+Inherited method from base Effect class. Uses a switch statement structure
+to account for the different numbers of parameters that different effect types
+can have.
+*/
 void ChorusEffect::setParameter(int paramId, float value) {
-    // Same pattern as DelayEffect
     switch (paramId) {
         case 0: setRate(value); break;
         case 1: setDepth(value); break;
@@ -117,11 +142,11 @@ void ChorusEffect::setParameter(int paramId, float value) {
 }
 
 bool ChorusEffect::isActive() const {
-    return enabled; // Same as DelayEffect
+    return enabled;
 }
 
 void ChorusEffect::setRate(float rateHz) {
-    rate = std::clamp(rateHz, 0.1f, 5.0f); // Same clamp pattern
+    rate = std::clamp(rateHz, 0.1f, 5.0f);
 }
 
 void ChorusEffect::setDepth(float newDepth) {
@@ -131,27 +156,25 @@ void ChorusEffect::setDepth(float newDepth) {
 void ChorusEffect::setVoices(int numVoices) {
     numVoices = std::clamp(numVoices, 2, 4);
     voices.resize(numVoices);
-    
-    // Reinitialize if sample rate is set
     if (sampleRate > 0) {
         setSampleRate(sampleRate);
     }
 }
 
 void ChorusEffect::setFeedback(float fb) {
-    feedback = std::clamp(fb, 0.0f, 0.3f); // Lower max than delay for safety
+    feedback = std::clamp(fb, 0.0f, 0.3f); 
 }
 
 void ChorusEffect::setWetLevel(float wet) {
-    wetLevel = std::clamp(wet, 0.0f, 1.0f); // Same as DelayEffect
+    wetLevel = std::clamp(wet, 0.0f, 1.0f); 
 }
 
 void ChorusEffect::setDryLevel(float dry) {
-    dryLevel = std::clamp(dry, 0.0f, 1.0f); // Same as DelayEffect
+    dryLevel = std::clamp(dry, 0.0f, 1.0f); 
 }
 
 void ChorusEffect::setEnabled(bool enable) {
-    enabled = enable; // Same as DelayEffect
+    enabled = enable; 
 }
 
 //getter methods for chorus effect parameters
@@ -183,22 +206,32 @@ bool ChorusEffect::isChorusEnabled() const {
     return enabled;
 }
 
+/*
+Helper method that generates a generic sine wave using the 
+cmath library. It returns a phase value between -1.0 and 1.0
+for modulation purposes in the processSample() method.
+*/
 float ChorusEffect::generateLFO(float phase) {
-    // Simple sine wave LFO (pure C++ math)
     return std::sin(phase);
 }
 
+/*
+Helper method that calculates the delay time in milliseconds of
+each voice, spreading them evenly between 5-20ms delay. 
+*/
 void ChorusEffect::updateVoiceDelayTimes() {
     if (voices.empty()) return;
-    
-    // Spread voices across delay range
     for (size_t i = 0; i < voices.size(); ++i) {
         float delayMs = MIN_DELAY_MS + (i * (MAX_DELAY_MS - MIN_DELAY_MS) / (voices.size() - 1));
         voices[i].baseDelayTime = getDelayInSamples(delayMs);
     }
 }
 
+/*
+Helper method that takes a float parameter in milliseconds and returns
+the sample count from the time in ms. It is used to calculate the delay time
+of each voice and the size of each buffer.
+*/
 int ChorusEffect::getDelayInSamples(float delayTimeMs) const {
-    // Same conversion pattern as DelayEffect
     return static_cast<int>((delayTimeMs / 1000.0f) * sampleRate);
 }
