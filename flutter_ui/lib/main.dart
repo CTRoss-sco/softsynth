@@ -211,17 +211,11 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
     
     // Handle octave shifting
     if (event is KeyDownEvent) {
-      if (key == LogicalKeyboardKey.arrowUp && _baseOctave < 8) {
-        setState(() {
-          _baseOctave++;
-        });
-        print("Octave shifted up to $_baseOctave");
+      if (key == LogicalKeyboardKey.arrowUp) {
+        _changeOctave(1);
         return KeyEventResult.handled;
-      } else if (key == LogicalKeyboardKey.arrowDown && _baseOctave > 0) {
-        setState(() {
-          _baseOctave--;
-        });
-        print("Octave shifted down to $_baseOctave");
+      } else if (key == LogicalKeyboardKey.arrowDown) {
+        _changeOctave(-1);
         return KeyEventResult.handled;
       }
     }
@@ -381,7 +375,72 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
             Container(
               height: 200,
               child: synthInitialized 
-                  ? _buildPianoKeyboard()
+                  ? Row (
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: _buildPianoKeyboard()
+                      ),
+                    Container(
+                      width: 60,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () => _changeOctave(1),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: _baseOctave >= 8 ? Colors.grey[600] : Colors.lightBlueAccent,
+                                borderRadius: BorderRadius.circular(6),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: const Offset(0, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.arrow_upward,
+                                color: _baseOctave >= 8 ? Colors.grey[600] : Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const SizedBox(height: 8),
+
+                          GestureDetector(
+                            onTap: () => _changeOctave(-1),
+                            child: Container(
+                              height: 50, 
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: _baseOctave <= 0 ? Colors.grey[600] : Colors.lightBlueAccent,
+                                borderRadius: BorderRadius.circular(6),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: const Offset(0, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.arrow_downward,
+                                color: _baseOctave <= 0 ? Colors.grey[600] : Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  )
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -432,7 +491,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
               autofocus: true,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                hintText: 'My Awesome Preset',
+                hintText: 'Enter a name here',
                 hintStyle: TextStyle(color: Colors.grey[400]),
                 border: const OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
@@ -589,6 +648,16 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
         ],
       ),
     );
+  }
+
+  void _changeOctave(int direction) {
+    setState(() {
+      if (direction > 0 && _baseOctave < 8) {
+        _baseOctave++;
+      } else if (direction < 0 && _baseOctave > 0) {
+        _baseOctave--;
+      }
+    });
   }
 }
 
