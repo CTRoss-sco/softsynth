@@ -1,11 +1,6 @@
-// Pure Unit Tests for Synthesizer Logic
-//
-// Tests mathematical functions and core logic without dependencies
-// on Flutter widgets or native libraries.
-
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:math' as math;
-import 'mock_synth_engine.dart';
+import 'mock_classes.dart';
 
 void main() {
   group('MIDI Mathematical Functions', () {
