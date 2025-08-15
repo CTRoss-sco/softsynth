@@ -227,7 +227,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _osc2Enabled ? Colors.green : Colors.red,
+                          color: _osc2Enabled ? Colors.lightBlueAccent : Colors.grey,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -236,7 +236,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
                 ),
                 const Tab(text: 'MIX'),
               ],
-              indicatorColor: Colors.blue,
+              indicatorColor: Colors.lightBlueAccent,
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey[400],
             ),
@@ -321,7 +321,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
                 child: Switch(
                   value: _osc2Enabled,
                   onChanged: (bool value) => _toggleOsc2(),
-                  activeColor: Colors.green,
+                  activeColor: Colors.lightBlueAccent,
                   inactiveThumbColor: Colors.grey,
                 ),
               ),
@@ -453,7 +453,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
                     min: 0.0,
                     max: 1.0,
                     divisions: 100,
-                    activeColor: Colors.green,
+                    activeColor: Colors.lightBlueAccent,
                     inactiveColor: Colors.grey,
                     onChanged: (double value) {
                       setState(() {

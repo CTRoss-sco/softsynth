@@ -76,12 +76,12 @@ class _EffectsControlsState extends State<EffectsControls>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.tune, color: Colors.cyanAccent, size: 20),
+                Icon(Icons.tune, color: Colors.lightBlueAccent, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'EFFECTS RACK',
                   style: TextStyle(
-                    color: Colors.cyanAccent,
+                    color: Colors.lightBlueAccent,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
@@ -106,9 +106,9 @@ class _EffectsControlsState extends State<EffectsControls>
               Tab(icon: Icon(Icons.repeat), text: 'DELAY'),
               Tab(icon: Icon(Icons.graphic_eq), text: 'CHORUS'),
             ],
-            labelColor: Colors.cyanAccent,
+            labelColor: Colors.lightBlueAccent,
             unselectedLabelColor: Colors.grey[400],
-            indicatorColor: Colors.cyanAccent,
+            indicatorColor: Colors.lightBlueAccent,
             indicatorWeight: 3,
           ),
           
@@ -141,7 +141,7 @@ class _EffectsControlsState extends State<EffectsControls>
             decoration: BoxDecoration(
               color: Colors.grey[800],
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.cyanAccent.withOpacity(0.3)),
+              border: Border.all(color: Colors.lightBlueAccent),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -150,7 +150,7 @@ class _EffectsControlsState extends State<EffectsControls>
                   width: 8,
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.cyanAccent,
+                    color: Colors.lightBlueAccent,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -158,7 +158,7 @@ class _EffectsControlsState extends State<EffectsControls>
                 Text(
                   'Low-pass Filter',
                   style: TextStyle(
-                    color: Colors.cyanAccent,
+                    color: Colors.lightBlueAccent,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -226,7 +226,7 @@ class _EffectsControlsState extends State<EffectsControls>
               ),
               child: Row(
                 children: [
-                  Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                  Icon(Icons.power_settings_new, color: Colors.lightBlueAccent, size: 16),
                   const SizedBox(width: 8),
                   Text('Enable Reverb', style: TextStyle(
                     color: Colors.white, 
@@ -241,10 +241,10 @@ class _EffectsControlsState extends State<EffectsControls>
                         _reverbEnabled = value;
                       });
                       SynthEngine.enableReverb(value);
-                      print('🌊 Reverb ${value ? "ENABLED" : "DISABLED"}');
+                      print('Reverb ${value ? "ENABLED" : "DISABLED"}');
                     },
-                    activeColor: Colors.cyanAccent,
-                    activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                    activeColor: Colors.lightBlueAccent,
+                    activeTrackColor: Colors.blue,
                     inactiveThumbColor: Colors.grey[400],
                     inactiveTrackColor: Colors.grey[600],
                   ),
@@ -386,7 +386,7 @@ class _EffectsControlsState extends State<EffectsControls>
             ),
             child: Row(
               children: [
-                Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                Icon(Icons.power_settings_new, color: Colors.lightBlueAccent, size: 16),
                 const SizedBox(width: 8),
                 Text('Enable Delay', style: TextStyle(
                   color: Colors.white, 
@@ -401,10 +401,10 @@ class _EffectsControlsState extends State<EffectsControls>
                       _delayEnabled = value;
                     });
                     SynthEngine.enableDelay(value);
-                    print('🚀 Delay ${value ? "ENABLED" : "DISABLED"}');
+                    print('Delay ${value ? "ENABLED" : "DISABLED"}');
                   },
-                  activeColor: Colors.cyanAccent,
-                  activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                  activeColor: Colors.lightBlueAccent,
+                  activeTrackColor: Colors.blue,
                   inactiveThumbColor: Colors.grey[400],
                   inactiveTrackColor: Colors.grey[600],
                 ),
@@ -546,7 +546,7 @@ Widget _buildChorusTab() {
             ),
             child: Row(
               children: [
-                Icon(Icons.power_settings_new, color: Colors.cyanAccent, size: 16),
+                Icon(Icons.power_settings_new, color: Colors.lightBlueAccent, size: 16),
                 const SizedBox(width: 8),
                 Text('Enable Chorus', style: TextStyle(
                   color: Colors.white, 
@@ -561,10 +561,10 @@ Widget _buildChorusTab() {
                       _chorusEnabled = value;
                     });
                     SynthEngine.enableChorus(value);
-                    print('🌊 Chorus ${value ? "ENABLED" : "DISABLED"}');
+                    print('Chorus ${value ? "ENABLED" : "DISABLED"}');
                   },
-                  activeColor: Colors.cyanAccent,
-                  activeTrackColor: Colors.cyanAccent.withOpacity(0.3),
+                  activeColor: Colors.lightBlueAccent,
+                  activeTrackColor: Colors.blue,
                   inactiveThumbColor: Colors.grey[400],
                   inactiveTrackColor: Colors.grey[600],
                 ),
@@ -756,7 +756,7 @@ Widget _buildChorusTab() {
         children: [
           Row(
             children: [
-              Icon(icon, color: Colors.cyanAccent, size: 14), 
+              Icon(icon, color: Colors.lightBlueAccent, size: 14), 
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -771,8 +771,8 @@ Widget _buildChorusTab() {
               Text(
                 valueDisplay,
                 style: TextStyle(
-                  color: Colors.cyanAccent,
-                  fontSize: 10, 
+                  color: Colors.lightBlueAccent,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -783,11 +783,11 @@ Widget _buildChorusTab() {
           
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: Colors.cyanAccent,
+              activeTrackColor: Colors.lightBlueAccent,
               inactiveTrackColor: Colors.grey[600],
-              thumbColor: Colors.cyanAccent,
-              overlayColor: Colors.cyanAccent.withOpacity(0.1),
-              trackHeight: 2.5, // ✅ Thinner track
+              thumbColor: Colors.lightBlueAccent,
+              overlayColor: Colors.lightBlueAccent,
+              trackHeight: 2.5, 
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8), 
             ),
             child: Slider(

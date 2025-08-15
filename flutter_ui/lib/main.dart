@@ -30,7 +30,7 @@ class SynthApp extends StatelessWidget {
     return MaterialApp(
       title: 'Synth App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
         useMaterial3: true,
       ),
       home: const ConsentScreen(),
@@ -64,7 +64,7 @@ class AuthWrapper extends StatelessWidget {
               ),
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
                 ),
               ),
             ),
@@ -259,14 +259,14 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
             if (AuthService.isSignedIn) ...[
               //Save Preset Button
               IconButton(
-                icon: const Icon(Icons.save, color: Colors.deepOrange),
+                icon: const Icon(Icons.save, color: Colors.lightBlueAccent),
                 onPressed: _showSavePresetDialog,
                 tooltip: 'Save Current Preset',
               ),
               
               //Load Preset Button  
               IconButton(
-                icon: const Icon(Icons.folder_open, color: Colors.deepOrange),
+                icon: const Icon(Icons.folder_open, color: Colors.lightBlueAccent),
                 onPressed: _showLoadPresetDialog,
                 tooltip: 'Load Preset',
               ),
@@ -287,7 +287,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
               
               //Logout Button
               IconButton(
-                icon: const Icon(Icons.logout, color: Colors.deepOrange),
+                icon: const Icon(Icons.logout, color: Colors.lightBlueAccent),
                 onPressed: () async {
                   await AuthService.signOut();
                   // AuthWrapper will automatically redirect to login
@@ -498,7 +498,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                   borderSide: BorderSide(color: Colors.grey[600]!),
                 ),
                 focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.deepOrange),
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
                 ),
               ),
             ),
@@ -538,7 +538,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Colors.lightBlueAccent,
             ),
             child: const Text('Save', style: TextStyle(color: Colors.white)),
           ),
@@ -568,7 +568,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator(color: Colors.deepOrange),
+                  child: CircularProgressIndicator(color: Colors.lightBlueAccent),
                 );
               }
               
@@ -600,7 +600,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                   return Card(
                     color: Colors.grey[800],
                     child: ListTile(
-                      leading: const Icon(Icons.library_music, color: Colors.deepOrange),
+                      leading: const Icon(Icons.library_music, color: Colors.lightBlueAccent),
                       title: Text(
                         preset.name,
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

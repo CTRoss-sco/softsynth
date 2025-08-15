@@ -41,11 +41,11 @@ class _ConsentScreenState extends State<ConsentScreen> {
               constraints: const BoxConstraints(maxWidth: 600), 
               child: Card(
                 elevation: 20,
-                shadowColor: Colors.deepOrange.withOpacity(0.3),
+                shadowColor: Colors.lightBlueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                   side: BorderSide(
-                    color: Colors.deepOrange.withOpacity(0.3),
+                    color: Colors.lightBlueAccent,
                     width: 1,
                   ),
                 ),
@@ -61,19 +61,19 @@ class _ConsentScreenState extends State<ConsentScreen> {
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Colors.deepOrange.withOpacity(0.3),
+                              Colors.lightBlueAccent,
                               Colors.transparent,
                             ],
                           ),
                           border: Border.all(
-                            color: Colors.deepOrange,
+                            color: Colors.lightBlueAccent,
                             width: 2,
                           ),
                         ),
                         child: const Icon(
                           Icons.privacy_tip,
                           size: 48,
-                          color: Colors.deepOrange,
+                          color: Colors.lightBlueAccent,
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -81,12 +81,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       ShaderMask(
                         shaderCallback: (bounds) => LinearGradient(
                           colors: [
-                            Colors.deepOrange,
-                            Colors.orange.shade300,
+                            Colors.lightBlueAccent,
+                            Colors.lightBlue.shade300,
                           ],
                         ).createShader(bounds),
                         child: Text(
-                          'Privacy & Terms',
+                          'Consent for User Testing',
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -112,12 +112,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
                           color: const Color(0xFF1a1a1a),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Colors.deepOrange.withOpacity(0.3),
+                            color: Colors.lightBlueAccent,
                             width: 1,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black,
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -141,7 +141,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.deepOrange.withOpacity(0.3),
+                            color: Colors.lightBlueAccent,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(12),
@@ -154,7 +154,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
                                   color: _consentGiven 
-                                      ? Colors.deepOrange 
+                                      ? Colors.lightBlueAccent
                                       : Colors.grey.shade600,
                                   width: 2,
                                 ),
@@ -166,7 +166,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                                     _consentGiven = value ?? false;
                                   });
                                 },
-                                activeColor: Colors.deepOrange,
+                                activeColor: Colors.lightBlueAccent,
                                 checkColor: Colors.white,
                                 side: BorderSide.none,
                                 shape: RoundedRectangleBorder(
@@ -198,13 +198,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: _consentGiven
-                                  ? [Colors.deepOrange, Colors.orange.shade600]
+                                  ? [Colors.blue, Colors.lightBlueAccent]
                                   : [Colors.grey.shade700, Colors.grey.shade800],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: _consentGiven ? [
                               BoxShadow(
-                                color: Colors.deepOrange.withOpacity(0.3),
+                                color: Colors.lightBlue,
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -242,7 +242,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                                 gradient: LinearGradient(
                                   colors: [
                                     Colors.transparent,
-                                    Colors.deepOrange.withOpacity(0.5),
+                                    Colors.lightBlueAccent,
                                     Colors.transparent,
                                   ],
                                 ),

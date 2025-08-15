@@ -82,11 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
               constraints: const BoxConstraints(maxWidth: 400),
               child: Card(
                 elevation: 20,
-                shadowColor: Colors.deepOrange.withOpacity(0.3),
+                shadowColor: Colors.lightBlueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                   side: BorderSide(
-                    color: Colors.deepOrange.withOpacity(0.3),
+                    color: Colors.lightBlueAccent,
                     width: 1,
                   ),
                 ),
@@ -105,19 +105,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                Colors.deepOrange.withOpacity(0.3),
+                                Colors.lightBlueAccent,
                                 Colors.transparent,
                               ],
                             ),
                             border: Border.all(
-                              color: Colors.deepOrange,
+                              color: Colors.lightBlueAccent,
                               width: 2,
                             ),
                           ),
                           child: const Icon(
                             Icons.music_note,
                             size: 48,
-                            color: Colors.deepOrange,
+                            color: Colors.lightBlueAccent,
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -126,12 +126,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         ShaderMask(
                           shaderCallback: (bounds) => LinearGradient(
                             colors: [
-                              Colors.deepOrange,
-                              Colors.orange.shade300,
+                              Colors.lightBlue,
+                              Colors.lightBlueAccent,
                             ],
                           ).createShader(bounds),
                           child: Text(
-                            '🎹 SynthApp',
+                            'SynthApp',
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -244,12 +244,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               gradient: LinearGradient(
                                 colors: _isLoading
                                     ? [Colors.grey.shade600, Colors.grey.shade700]
-                                    : [Colors.deepOrange, Colors.orange.shade600],
+                                    : [Colors.lightBlue, Colors.lightBlueAccent],
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.deepOrange.withOpacity(0.3),
+                                  color: Colors.lightBlueAccent,
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -291,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.deepOrange.withOpacity(0.3),
+                              color: Colors.lightBlueAccent,
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(8),
@@ -311,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? "Don't have an account? Sign Up"
                                   : 'Already have an account? Sign In',
                               style: TextStyle(
-                                color: Colors.deepOrange.shade300,
+                                color: Colors.lightBlueAccent,
                                 fontSize: 14,
                               ),
                             ),
@@ -330,7 +330,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   gradient: LinearGradient(
                                     colors: [
                                       Colors.transparent,
-                                      Colors.deepOrange.withOpacity(0.5),
+                                      Colors.lightBlueAccent,
                                       Colors.transparent,
                                     ],
                                   ),
@@ -363,7 +363,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.deepOrange.withOpacity(0.3),
+          color: Colors.grey,
           width: 1,
         ),
         boxShadow: [
@@ -390,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           prefixIcon: Icon(
             icon,
-            color: Colors.deepOrange.withOpacity(0.8),
+            color: Colors.lightBlueAccent,
             size: 20,
           ),
           filled: true,
@@ -402,26 +402,25 @@ class _LoginScreenState extends State<LoginScreen> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.deepOrange,
-              width: 2,
+              color: Colors.grey
             ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.red.shade400,
+              color: Colors.grey,
               width: 1,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.red.shade400,
+              color: Colors.grey,
               width: 2,
             ),
           ),
           errorStyle: TextStyle(
-            color: Colors.red.shade300,
+            color: Colors.grey,
             fontSize: 12,
           ),
           contentPadding: const EdgeInsets.symmetric(
