@@ -321,8 +321,10 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
                 child: Switch(
                   value: _osc2Enabled,
                   onChanged: (bool value) => _toggleOsc2(),
-                  activeColor: Colors.lightBlueAccent,
-                  inactiveThumbColor: Colors.grey,
+                  activeColor: Colors.white,
+                  activeTrackColor: Color(0xFF64B5F6),
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Color(0xFF424242),
                 ),
               ),
             ],

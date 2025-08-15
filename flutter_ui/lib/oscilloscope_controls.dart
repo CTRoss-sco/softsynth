@@ -55,56 +55,77 @@ class _OscilloscopeControlsState extends State<OscilloscopeControls>
 
   Widget _buildToggleButton() {
     return Container(
-      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
-      child: Material(
-        color: _oscilloscopeEnabled 
-            ? const Color(0xFF2196F3).withOpacity(0.1)
-            : const Color(0xFF424242),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
         borderRadius: BorderRadius.circular(8),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFF424242),
+          width: 1,
+        ),
+      ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Label
+        Text(
+          'ENABLE OSCILLOSCOPE',
+          style: const TextStyle(
+            color: Colors.lightBlueAccent,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.5,
+          ),
+        ),
+        
+        // Toggle Switch
+        GestureDetector(
           onTap: _toggleOscilloscope,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 50,
+            height: 28,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(14),
+              color: _oscilloscopeEnabled 
+                  ? const Color(0xFF64B5F6)  
+                  : const Color(0xFF424242), 
               border: Border.all(
                 color: _oscilloscopeEnabled 
-                    ? const Color(0xFF2196F3)
+                    ? const Color(0xFF64B5F6)
                     : const Color(0xFF616161),
-                width: 1.5,
+                width: 1,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  _oscilloscopeEnabled ? Icons.stop : Icons.play_arrow,
-                  color: _oscilloscopeEnabled 
-                      ? const Color(0xFF2196F3)
-                      : const Color(0xFFBDBDBD),
-                  size: 20,
+            child: AnimatedAlign(
+              duration: const Duration(milliseconds: 200),
+              alignment: _oscilloscopeEnabled 
+                  ? Alignment.centerRight 
+                  : Alignment.centerLeft,
+              child: Container(
+                width: 24,
+                height: 24,
+                margin: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  _oscilloscopeEnabled ? 'STOP SCOPE' : 'START SCOPE',
-                  style: TextStyle(
-                    color: _oscilloscopeEnabled 
-                        ? const Color(0xFF2196F3)
-                        : const Color(0xFFBDBDBD),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   Widget _buildOscilloscopeDisplay() {
     return Container(
@@ -208,29 +229,6 @@ class _OscilloscopeControlsState extends State<OscilloscopeControls>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header matching your effects style
-          Row(
-            children: [
-              Icon(
-                Icons.show_chart,
-                color: const Color(0xFF64B5F6),
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'OSCILLOSCOPE',
-                style: const TextStyle(
-                  color: Color(0xFF64B5F6),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.8,
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 16),
-          
           // Toggle button
           _buildToggleButton(),
           

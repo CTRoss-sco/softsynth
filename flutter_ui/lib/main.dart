@@ -313,11 +313,12 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Left column - Oscillator controls
                       Expanded(
                         flex: 1,
-                        child: const OscillatorControlsWidget(),
+                          child: const OscillatorControlsWidget(),
                       ),
                       
                       const SizedBox(width: 12),
@@ -334,7 +335,7 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
                       Expanded(
                         flex: 1,
                         child: OscilloscopeControls(),
-                      ),
+                        ),
                     ],
                   ),
                 ),

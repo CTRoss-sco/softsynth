@@ -243,10 +243,10 @@ class _EffectsControlsState extends State<EffectsControls>
                       SynthEngine.enableReverb(value);
                       print('Reverb ${value ? "ENABLED" : "DISABLED"}');
                     },
-                    activeColor: Colors.lightBlueAccent,
-                    activeTrackColor: Colors.blue,
-                    inactiveThumbColor: Colors.grey[400],
-                    inactiveTrackColor: Colors.grey[600],
+                    activeColor: Colors.white,
+                    activeTrackColor: Color(0xFF64B5F6),
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Color(0xFF424242),
                   ),
                 ],
               ),
@@ -403,10 +403,10 @@ class _EffectsControlsState extends State<EffectsControls>
                     SynthEngine.enableDelay(value);
                     print('Delay ${value ? "ENABLED" : "DISABLED"}');
                   },
-                  activeColor: Colors.lightBlueAccent,
-                  activeTrackColor: Colors.blue,
-                  inactiveThumbColor: Colors.grey[400],
-                  inactiveTrackColor: Colors.grey[600],
+                  activeColor: Colors.white,
+                  activeTrackColor: Color(0xFF64B5F6),
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Color(0xFF424242),
                 ),
               ],
             ),
@@ -563,10 +563,10 @@ Widget _buildChorusTab() {
                     SynthEngine.enableChorus(value);
                     print('Chorus ${value ? "ENABLED" : "DISABLED"}');
                   },
-                  activeColor: Colors.lightBlueAccent,
-                  activeTrackColor: Colors.blue,
-                  inactiveThumbColor: Colors.grey[400],
-                  inactiveTrackColor: Colors.grey[600],
+                  activeColor: Colors.white,
+                  activeTrackColor: Color(0xFF64B5F6),
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Color(0xFF424242),
                 ),
               ],
             ),

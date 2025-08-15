@@ -79,7 +79,7 @@ class PresetModel {
     'userId': userId,
     'createdAt': createdAt.toIso8601String(),
     
-    // Always save oscillator and filter settings
+    // Always saves the oscillator and filter settings
     'osc1Waveform': osc1Waveform,
     'osc2Waveform': osc2Waveform,
     'detune': detune,
@@ -88,7 +88,7 @@ class PresetModel {
     'resonance': resonance,
   };
 
-  // Only save reverb settings if enabled
+  // Only saves the reverb settings if enabled
   if (reverbEnabled) {
     json.addAll({
       'reverbEnabled': reverbEnabled,
@@ -98,10 +98,10 @@ class PresetModel {
       'reverbDryLevel': reverbDryLevel,
     });
   } else {
-    json['reverbEnabled'] = false; // Still save the enabled state
+    json['reverbEnabled'] = false; // Still saves the enabled state
   }
 
-  // Only save delay settings if enabled
+  // Only saves the delay settings if enabled
   if (delayEnabled) {
     json.addAll({
       'delayEnabled': delayEnabled,
@@ -111,10 +111,10 @@ class PresetModel {
       'delayDryLevel': delayDryLevel,
     });
   } else {
-    json['delayEnabled'] = false; // Still save the enabled state
+    json['delayEnabled'] = false; // Still saves the enabled state
   }
 
-  // Only save chorus settings if enabled
+  // Only saves the chorus settings if enabled
   if (chorusEnabled) {
     json.addAll({
       'chorusEnabled': chorusEnabled,
@@ -126,7 +126,7 @@ class PresetModel {
       'chorusDryLevel': chorusDryLevel,
     });
   } else {
-    json['chorusEnabled'] = false; // Still save the enabled state
+    json['chorusEnabled'] = false; // Still saves the enabled state
   }
 
   return json;
