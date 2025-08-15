@@ -71,29 +71,52 @@ class PresetModel {
     required this.chorusDryLevel,
   });
 
-  // Convert to JSON for Firestore
+  // Convert to JSON format for Firestore storage
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'userId': userId,
-      'createdAt': createdAt.toIso8601String(),
-      'osc1Waveform': osc1Waveform,
-      'osc2Waveform': osc2Waveform,
-      'detune': detune,
-      'oscillatorMix': oscillatorMix,
-      'cutoff': cutoff,
-      'resonance': resonance,
+     Map<String, dynamic> json = {
+    'id': id,
+    'name': name,
+    'userId': userId,
+    'createdAt': createdAt.toIso8601String(),
+    
+    // Always save oscillator and filter settings
+    'osc1Waveform': osc1Waveform,
+    'osc2Waveform': osc2Waveform,
+    'detune': detune,
+    'oscillatorMix': oscillatorMix,
+    'cutoff': cutoff,
+    'resonance': resonance,
+  };
+
+  // Only save reverb settings if enabled
+  if (reverbEnabled) {
+    json.addAll({
       'reverbEnabled': reverbEnabled,
       'reverbRoomSize': reverbRoomSize,
       'reverbDamping': reverbDamping,
       'reverbWetLevel': reverbWetLevel,
       'reverbDryLevel': reverbDryLevel,
+    });
+  } else {
+    json['reverbEnabled'] = false; // Still save the enabled state
+  }
+
+  // Only save delay settings if enabled
+  if (delayEnabled) {
+    json.addAll({
       'delayEnabled': delayEnabled,
       'delayTime': delayTime,
       'delayFeedback': delayFeedback,
       'delayWetLevel': delayWetLevel,
       'delayDryLevel': delayDryLevel,
+    });
+  } else {
+    json['delayEnabled'] = false; // Still save the enabled state
+  }
+
+  // Only save chorus settings if enabled
+  if (chorusEnabled) {
+    json.addAll({
       'chorusEnabled': chorusEnabled,
       'chorusRate': chorusRate,
       'chorusDepth': chorusDepth,
@@ -101,39 +124,80 @@ class PresetModel {
       'chorusFeedback': chorusFeedback,
       'chorusWetLevel': chorusWetLevel,
       'chorusDryLevel': chorusDryLevel,
-    };
+    });
+  } else {
+    json['chorusEnabled'] = false; // Still save the enabled state
   }
 
-  // Create from Firestore JSON
+  return json;
+}
+
+// Create from Firestore JSON format
   factory PresetModel.fromJson(Map<String, dynamic> json) {
-    return PresetModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      userId: json['userId'] ?? '',
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      osc1Waveform: json['osc1Waveform'] ?? 'Sine',
-      osc2Waveform: json['osc2Waveform'] ?? 'Sine',
-      detune: (json['detune'] ?? 0.0).toDouble(),
-      oscillatorMix: (json['oscillatorMix'] ?? 0.0).toDouble(),
-      cutoff: (json['cutoff'] ?? 1000.0).toDouble(),
-      resonance: (json['resonance'] ?? 0.1).toDouble(),
-      reverbEnabled: json['reverbEnabled'] ?? false,
-      reverbRoomSize: (json['reverbRoomSize'] ?? 0.5).toDouble(),
-      reverbDamping: (json['reverbDamping'] ?? 0.5).toDouble(),
-      reverbWetLevel: (json['reverbWetLevel'] ?? 0.3).toDouble(),
-      reverbDryLevel: (json['reverbDryLevel'] ?? 0.7).toDouble(),
-      delayEnabled: json['delayEnabled'] ?? false,
-      delayTime: (json['delayTime'] ?? 0.3).toDouble(),
-      delayFeedback: (json['delayFeedback'] ?? 0.3).toDouble(),
-      delayWetLevel: (json['delayWetLevel'] ?? 0.3).toDouble(),
-      delayDryLevel: (json['delayDryLevel'] ?? 0.7).toDouble(),
-      chorusEnabled: json['chorusEnabled'] ?? false,
-      chorusRate: (json['chorusRate'] ?? 0.5).toDouble(),
-      chorusDepth: (json['chorusDepth'] ?? 0.5).toDouble(),
-      chorusVoices: json['chorusVoices'] ?? 2,
-      chorusFeedback: (json['chorusFeedback'] ?? 0.0).toDouble(),
-      chorusWetLevel: (json['chorusWetLevel'] ?? 0.3).toDouble(),
-      chorusDryLevel: (json['chorusDryLevel'] ?? 0.7).toDouble(),
+      return PresetModel(
+    id: json['id'] ?? '',
+    name: json['name'] ?? '',
+    userId: json['userId'] ?? '',
+    createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+    
+    // Oscillator and filter settings (always present)
+    osc1Waveform: json['osc1Waveform'] ?? 'Sine',
+    osc2Waveform: json['osc2Waveform'] ?? 'Sine',
+    detune: (json['detune'] ?? 0.0).toDouble(),
+    oscillatorMix: (json['oscillatorMix'] ?? 0.5).toDouble(),
+    cutoff: (json['cutoff'] ?? 1000.0).toDouble(),
+    resonance: (json['resonance'] ?? 1.0).toDouble(),
+    
+    // Reverb settings (use defaults if not saved due to being disabled)
+    reverbEnabled: json['reverbEnabled'] ?? false,
+    reverbRoomSize: json.containsKey('reverbRoomSize') 
+        ? (json['reverbRoomSize']).toDouble() 
+        : 0.5, // Default only if key doesn't exist
+    reverbDamping: json.containsKey('reverbDamping') 
+        ? (json['reverbDamping']).toDouble() 
+        : 0.5,
+    reverbWetLevel: json.containsKey('reverbWetLevel') 
+        ? (json['reverbWetLevel']).toDouble() 
+        : 0.3,
+    reverbDryLevel: json.containsKey('reverbDryLevel') 
+        ? (json['reverbDryLevel']).toDouble() 
+        : 0.7,
+    
+    // Delay settings (use defaults if not saved due to being disabled)
+    delayEnabled: json['delayEnabled'] ?? false,
+    delayTime: json.containsKey('delayTime') 
+        ? (json['delayTime']).toDouble() 
+        : 0.3,
+    delayFeedback: json.containsKey('delayFeedback') 
+        ? (json['delayFeedback']).toDouble() 
+        : 0.3,
+    delayWetLevel: json.containsKey('delayWetLevel') 
+        ? (json['delayWetLevel']).toDouble() 
+        : 0.3,
+    delayDryLevel: json.containsKey('delayDryLevel') 
+        ? (json['delayDryLevel']).toDouble() 
+        : 0.7,
+    
+    // Chorus settings (use defaults if not saved due to being disabled)
+    chorusEnabled: json['chorusEnabled'] ?? false,
+    chorusRate: json.containsKey('chorusRate') 
+        ? (json['chorusRate']).toDouble() 
+        : 1.5,
+    chorusDepth: json.containsKey('chorusDepth') 
+        ? (json['chorusDepth']).toDouble() 
+        : 0.4,
+    chorusVoices: json.containsKey('chorusVoices') 
+        ? json['chorusVoices'] 
+        : 2,
+    chorusFeedback: json.containsKey('chorusFeedback') 
+        ? (json['chorusFeedback']).toDouble() 
+        : 0.2,
+    chorusWetLevel: json.containsKey('chorusWetLevel') 
+        ? (json['chorusWetLevel']).toDouble() 
+        : 0.5,
+    chorusDryLevel: json.containsKey('chorusDryLevel') 
+        ? (json['chorusDryLevel']).toDouble() 
+        : 0.8,
     );
   }
 }
