@@ -577,8 +577,6 @@ Helper method used to convert MIDI note numbers to frequencies.
 The value 440.0f is used as this corresponds to equal temperament tuning.
 */
 float SynthEngine::midiNoteToFrequency(int midiNote) {
-    // A4 (MIDI note 69) = 440 Hz
-    // Each semitone = 2^(1/12) frequency ratio
     return 440.0f * std::pow(2.0f, (midiNote - 69) / 12.0f);
 }
 
