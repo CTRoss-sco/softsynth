@@ -25,7 +25,7 @@ add_library(SynthEngine SHARED
     Source/Effects/ChorusEffect.h
 )
 
-# Link JUCE modules to your SynthEngine
+# Link JUCE modules to SynthEngine
 target_link_libraries(SynthEngine PRIVATE
     juce::juce_audio_basics
     juce::juce_audio_devices
@@ -84,7 +84,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         # tests/test_filter.cpp
     )
     
-    # Link Google Test and your SynthEngine library
+    # Link Google Test and SynthEngine library
     target_link_libraries(
         SynthEngineTests
         PRIVATE

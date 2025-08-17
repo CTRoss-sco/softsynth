@@ -5,7 +5,7 @@ import 'synth_engine.dart';
 // Oscillator control extensions for SynthEngine
 class OscillatorControls {
 
-  // New dual oscillator function wrappers
+  //dual oscillator function wrappers
   static late void Function(Pointer<Void>, int) _synthSetOsc1Waveform;
   static late void Function(Pointer<Void>, int) _synthSetOsc2Waveform;
   static late void Function(Pointer<Void>, double) _synthSetDetune;
@@ -23,7 +23,7 @@ class OscillatorControls {
     if (_initialized) return true;
 
     try {
-      // Get new dual oscillator function pointers
+      // Get dual oscillator function pointers
       _synthSetOsc1Waveform = library
           .lookup<NativeFunction<Void Function(Pointer<Void>, Int32)>>('synth_set_osc1_waveform')
           .asFunction<void Function(Pointer<Void>, int)>();

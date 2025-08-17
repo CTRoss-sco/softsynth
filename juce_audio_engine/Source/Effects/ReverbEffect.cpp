@@ -47,7 +47,7 @@ void ReverbEffect::DelayLine::clear() {
 
 /*
 ReverbEffect class constructor. The parameters used are initialised as 
-default values at 0.5f (50% levels) to create a balanced sound. The sampleRate
+default values to create a balanced sound. The sampleRate
 parameter follows the same sampleRate value used in SynthEngine, which represents
 the standard frequency range this is audible in human hearing.
 */
@@ -66,14 +66,14 @@ buffer sizes. Averages the final reverb value then returns a mix of the original
 value with the processed reverb sample.
 */
 float ReverbEffect::processSample(float sample) {
-    // Process through delay lines
+    
     float reverb = 0.0f;
     reverb += delay1.process(sample, roomSize * damping);
     reverb += delay2.process(sample, roomSize * damping);
     reverb += delay3.process(sample, roomSize * damping);
     reverb += delay4.process(sample, roomSize * damping);
     
-    // Average and mix
+    
     reverb *= 0.25f;
     return (sample * dryLevel) + (reverb * wetLevel);
 }

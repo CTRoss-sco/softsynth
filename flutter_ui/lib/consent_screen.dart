@@ -55,29 +55,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: RadialGradient(
-                            colors: [
-                              Colors.lightBlueAccent,
-                              Colors.transparent,
-                            ],
-                          ),
-                          border: Border.all(
-                            color: Colors.lightBlueAccent,
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.privacy_tip,
-                          size: 48,
-                          color: Colors.lightBlueAccent,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                  
                       ShaderMask(
                         shaderCallback: (bounds) => LinearGradient(
                           colors: [
@@ -177,7 +154,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'I have read and agree to the privacy policy and terms of service',
+                                'I have read and agree to the consent details above',
                                 style: TextStyle(
                                   color: Colors.grey.shade300,
                                   fontSize: 14,

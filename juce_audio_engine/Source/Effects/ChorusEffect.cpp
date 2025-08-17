@@ -46,7 +46,7 @@ float ChorusEffect::processSample(float sample) {
     
     float outputSample = sample * dryLevel; 
     
-    // Process each ChorusVoice struct
+    // Process through each ChorusVoice struct
     for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
         auto& voice = voices[voiceIndex];
         

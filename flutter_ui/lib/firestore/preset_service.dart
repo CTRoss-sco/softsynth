@@ -18,7 +18,7 @@ class PresetService {
     try {
       // Capture current synth state
       final preset = PresetModel(
-        id: '', // Firestore will generate this
+        id: '', // Firestore generates this
         name: presetName,
         userId: user.uid,
         createdAt: DateTime.now(),
@@ -129,7 +129,7 @@ class PresetService {
       SynthEngine.setChorusWetLevel(preset.chorusWetLevel);
       SynthEngine.setChorusDryLevel(preset.chorusDryLevel);
 
-      print('✅ Preset "${preset.name}" loaded successfully!');
+      print('Preset "${preset.name}" loaded successfully');
       
     } catch (e) {
       print('Failed to load preset: $e');

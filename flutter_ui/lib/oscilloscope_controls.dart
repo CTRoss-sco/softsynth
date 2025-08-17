@@ -251,7 +251,7 @@ class WaveformPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw grid (matches your dark theme)
+    
     _drawGrid(canvas, size);
     
     if (!enabled) {
@@ -293,7 +293,7 @@ class WaveformPainter extends CustomPainter {
       );
     }
 
-    // Center line (brighter - matches your accent color)
+    
     final centerPaint = Paint()
       ..color = const Color(0xFF616161)
       ..strokeWidth = 1.0;
@@ -308,7 +308,7 @@ class WaveformPainter extends CustomPainter {
     if (samples.length < 2) return;
 
     final waveformPaint = Paint()
-      ..color = const Color(0xFF64B5F6) // Matches your blue accent
+      ..color = const Color(0xFF64B5F6) 
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
@@ -316,7 +316,7 @@ class WaveformPainter extends CustomPainter {
     
     for (int i = 0; i < samples.length; i++) {
       final x = (i / (samples.length - 1)) * size.width;
-      // Clamp and scale the sample value
+      // Clamp and scale the sample value (between -1.0 and 1.0)
       final clampedSample = samples[i].clamp(-1.0, 1.0);
       final y = size.height / 2 - (clampedSample * size.height * 0.4);
       
@@ -329,9 +329,8 @@ class WaveformPainter extends CustomPainter {
 
     canvas.drawPath(path, waveformPaint);
     
-    // Add subtle glow effect
     final glowPaint = Paint()
-      ..color = const Color(0xFF64B5F6).withOpacity(0.3)
+      ..color = const Color(0xFF64B5F6)
       ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'synth_engine.dart';
 import 'oscillator_controls.dart'; 
 import 'effects_controls.dart';
-import 'effects_engine.dart';
 import 'oscilloscope_controls.dart';
 import 'firebase/firebase_init.dart';
 import 'firebase/auth_service.dart';
@@ -134,7 +133,6 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
   @override
   void dispose() {
     SynthEngine.cleanup();
-    EffectsEngine.shutdown();
     super.dispose();
   }
   
@@ -143,14 +141,6 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
     if (success) {
       // Initialize oscillator controls after SynthEngine
       bool oscSuccess = OscillatorControls.initialize(SynthEngine.library);
-      
-      // ADD THIS: Initialize effects engine
-      bool effectsSuccess = EffectsEngine.initialize();
-      if (effectsSuccess) {
-        print('Effects Engine initialized successfully!');
-      } else {
-        print('Effects unavailable, but synth still works');
-      }
       
       if (oscSuccess) {
         setState(() {

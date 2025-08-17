@@ -63,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Dark synth-style background
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -98,31 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Synth-style logo
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                Colors.lightBlueAccent,
-                                Colors.transparent,
-                              ],
-                            ),
-                            border: Border.all(
-                              color: Colors.lightBlueAccent,
-                              width: 2,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.music_note,
-                            size: 48,
-                            color: Colors.lightBlueAccent,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        
-                        // Title with synth glow effect
                         ShaderMask(
                           shaderCallback: (bounds) => LinearGradient(
                             colors: [
@@ -131,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ).createShader(bounds),
                           child: Text(
-                            'SynthApp',
+                            'SoftSynth',
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -149,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 40),
                         
-                        // Name field (only for register) - Synth style
+                        // Name field (only for registering)
                         if (!_isLogin) ...[
                           _buildSynthTextField(
                             controller: _nameController,
@@ -165,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 20),
                         ],
                         
-                        // Email field - Synth style
+                        // Email field
                         _buildSynthTextField(
                           controller: _emailController,
                           label: 'Email',
@@ -183,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
                         
-                        // Password field - Synth style
+                        // Password field
                         _buildSynthTextField(
                           controller: _passwordController,
                           label: 'Password',
@@ -201,13 +175,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 32),
                         
-                        // Error message with synth styling
+                        // Error message
                         if (_errorMessage != null)
                           Container(
                             padding: const EdgeInsets.all(16),
                             margin: const EdgeInsets.only(bottom: 24),
                             decoration: BoxDecoration(
-                              color: Colors.red.shade900.withOpacity(0.3),
+                              color: Colors.red.shade900,
                               border: Border.all(
                                 color: Colors.red.shade400,
                                 width: 1,
@@ -235,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         
-                        // Submit button - Synth style
+                        // Submit button
                         SizedBox(
                           width: double.infinity,
                           height: 56,
@@ -286,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 24),
                         
-                        // Toggle between login/register - Synth style
+                        // Toggle between login/register
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
@@ -320,7 +294,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         
                         const SizedBox(height: 20),
                         
-                        // Synth-style decorative elements
                         Row(
                           children: [
                             Expanded(
