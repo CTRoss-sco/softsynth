@@ -172,7 +172,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       ),
                       const SizedBox(height: 32),
                       
-                      // Continue button - same style as login
+                      
                       SizedBox(
                         width: double.infinity,
                         height: 56,
@@ -192,7 +192,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                               ),
                             ] : [],
                           ),
-                          child: ElevatedButton(
+                          child: ElevatedButton( // Continue button
                             onPressed: _consentGiven ? _proceedToLogin : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,

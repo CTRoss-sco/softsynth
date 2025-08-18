@@ -48,7 +48,7 @@ class _EffectsControlsState extends State<EffectsControls>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Start with just FILTER tab
+    _tabController = TabController(length: 4, vsync: this); // Start with just the FILTER tab
   }
 
   @override
