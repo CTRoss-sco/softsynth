@@ -7,6 +7,7 @@ struct SynthEngineHandle {
     std::unique_ptr<SynthEngine> engine;
 };
 
+//extern C wrapper containing FFI function declarations.
 extern "C" {
 
 SynthEngineHandle* synth_create() {
@@ -32,6 +33,7 @@ void synth_set_cutoff(SynthEngineHandle* handle, float value) {
     }
 }
 
+//note handling methods
 void synth_note_on(SynthEngineHandle* handle, int note, float velocity) {
     if (handle && handle->engine) {
         handle->engine->noteOn(note, velocity);
@@ -44,13 +46,7 @@ void synth_note_off(SynthEngineHandle* handle, int note) {
     }
 }
 
-void synth_process_audio(SynthEngineHandle* handle, float* buffer, int frames) {
-    if (handle && handle->engine) {
-        // TODO: Implement audio processing
-    }
-}
-
-// New dual oscillator control functions
+//dual oscillator setter controls
 void synth_set_osc1_waveform(SynthEngineHandle* handle, int waveform) {
     if (handle && handle->engine) {
         handle->engine->setOsc1Waveform(static_cast<WaveformType>(waveform));
@@ -75,6 +71,7 @@ void synth_set_osc_mix(SynthEngineHandle* handle, float mix) {
     }
 }
 
+//filter setter controls
 void synth_set_filter_cutoff(SynthEngineHandle* handle, float value) {
     if (handle && handle->engine) {
         handle->engine->setCutoff(value);
@@ -92,6 +89,7 @@ void synth_enable_effects_processing(SynthEngineHandle* handle, bool enable) {
         handle->engine->enableReverb(enable);
 }
 
+//reverb setter controls
 void synth_set_reverb_room_size(SynthEngineHandle* handle, float value) {
     if (!handle || !handle->engine) return;
     handle->engine->setReverbParameter(0, value);
@@ -112,6 +110,7 @@ void synth_set_reverb_dry_level(SynthEngineHandle* handle, float value) {
     handle->engine->setReverbParameter(3, value);
 }
 
+//delay setter controls
 void synth_enable_delay(SynthEngineHandle* handle, int enable) {
     if (!handle || !handle->engine) return;
     handle->engine->enableDelay(enable != 0);
@@ -137,6 +136,7 @@ void synth_set_delay_dry_level(SynthEngineHandle* handle, float dryLevel) {
     handle->engine->setDelayDryLevel(dryLevel);
 }
 
+//chorus setter controls
 void synth_enable_chorus(SynthEngineHandle* handle, int enable) {
     if (!handle || !handle->engine) return;
     handle->engine->enableChorus(enable != 0);

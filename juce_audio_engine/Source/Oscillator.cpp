@@ -42,7 +42,7 @@ float Oscillator::generateSample(double sampleRate) {
     // Update phase for next sample
     phase += frequency / sampleRate;
     
-    // Wrap phase to prevent overflow (kept in 0.0-1.0 range)
+    // Wrap phase to prevent overflow (keeping it in 0.0-1.0 range)
     if (phase >= 1.0f) {
         phase -= 1.0f; //i.e. 1.1 phase becomes 0.1
     }

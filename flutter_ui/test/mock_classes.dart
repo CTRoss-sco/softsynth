@@ -135,7 +135,7 @@ class MockSynthEngine {
   }
 }
 
-/// Mock Oscillator Controls for widget testing
+/// Mock Oscillator Controls class for widget testing
 class MockOscillatorControls {
   static bool _initialized = false;
   
@@ -164,7 +164,7 @@ class MockOscillatorControls {
   }
 }
 
-/// Mock Firebase Auth for widget testing
+/// Mock Firebase Auth class for widget testing
 class MockAuthService {
   static bool _isSignedIn = false;
   static MockUser? _currentUser;
@@ -216,7 +216,7 @@ class MockUser {
   String toString() => 'MockUser(email: $email, displayName: $displayName)';
 }
 
-/// Mock Firestore for preset saving/loading
+/// Mock Firestore class for preset saving/loading
 class MockFirestore {
   static final Map<String, Map<String, dynamic>> _presets = {};
   

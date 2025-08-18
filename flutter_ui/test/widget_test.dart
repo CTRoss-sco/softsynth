@@ -7,6 +7,11 @@ import 'package:synth_ui/oscillator_controls.dart';
 import 'package:synth_ui/oscilloscope_controls.dart';
 import 'mock_classes.dart';
 
+/*
+File containing widget tests for the application user interface.
+Covers rendering, 
+*/
+
 void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
@@ -176,7 +181,7 @@ void main() {
         await tester.tap(gestureDetectors.first);
         await tester.pump();
         
-        // Note: The callback should work, but let's just verify no crash
+        
         expect(find.byType(PianoKeyboard), findsOneWidget);
       }
     });
@@ -209,7 +214,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Container(
-              width: 800, // Give plenty of space
+              width: 800, 
               height: 600,
               child: OscillatorControlsWidget(),
             ),
@@ -219,7 +224,7 @@ void main() {
       
       await tester.pumpAndSettle();
       
-      // Just verify it renders
+      
       expect(find.byType(OscillatorControlsWidget), findsOneWidget);
     });
 
@@ -236,7 +241,7 @@ void main() {
       
       await tester.pumpAndSettle();
       
-      // Just verify it renders
+      
       expect(find.byType(OscilloscopeControls), findsOneWidget);
     });
   });
@@ -357,7 +362,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         
-        // Verify the widget is still there (no crash)
+        // Verify the widget is still there
         expect(find.byType(EffectsControls), findsOneWidget);
         expect(find.byType(Slider), findsWidgets);
       }
@@ -408,7 +413,7 @@ void main() {
           await tester.pumpAndSettle();
         }
         
-        // Verify the widget is still there (no crash)
+        // Verify the widget is still there
         expect(find.byType(OscillatorControlsWidget), findsOneWidget);
       }
     });
@@ -450,17 +455,17 @@ void main() {
         await tester.tap(gestureDetectors.first);
         await tester.pump();
         
-        // Verify widget is still there and callback might have fired
+        
         expect(find.byType(PianoKeyboard), findsOneWidget);
         
-        // Try tapping multiple keys (don't rely on exact callback counting)
+        // Try tapping multiple keys 
         if (gestureDetectors.evaluate().length >= 3) {
           await tester.tap(gestureDetectors.at(1));
           await tester.pump();
           await tester.tap(gestureDetectors.at(2));
           await tester.pump();
           
-          // Just verify no crashes
+          
           expect(find.byType(PianoKeyboard), findsOneWidget);
         }
       }

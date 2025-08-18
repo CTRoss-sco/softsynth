@@ -1,6 +1,13 @@
 #include <gtest/gtest.h>
 #include "SynthEngine.h"
 
+/*
+File containing unit tests for each type of audio
+effect in the application. Covers parameter setting, 
+enabling and disabling effects, and combining different
+enabled effects at one time.
+*/
+
 class EffectsTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -14,7 +21,7 @@ protected:
     std::unique_ptr<SynthEngine> synthEngine;
 };
 
-// Test effects enable/disable
+// Test effects enable and disable
 TEST_F(EffectsTest, EffectsEnableDisable) {
     // Test reverb
     synthEngine->enableReverb(true);
@@ -73,7 +80,7 @@ TEST_F(EffectsTest, ChorusParameters) {
 
 // Test reverb parameters using the generic method
 TEST_F(EffectsTest, ReverbParameters) {
-    // Set parameters using the generic method
+    
     synthEngine->setReverbParameter(0, 0.7f);  // Room size
     synthEngine->setReverbParameter(1, 0.5f);  // Damping  
     synthEngine->setReverbParameter(2, 0.3f);  // Wet level
@@ -101,10 +108,10 @@ TEST_F(EffectsTest, RapidParameterChanges) {
     synthEngine->enableDelay(true);
     synthEngine->enableChorus(true);
     
-    // Play a note
+    
     synthEngine->noteOn(60, 0.8f);
     
-    // Rapidly change parameters
+    
     for (int i = 0; i < 20; ++i) {
         synthEngine->setCutoff(500.0f + i * 100.0f);
         synthEngine->setResonance(0.1f + (i * 0.03f));
@@ -115,7 +122,7 @@ TEST_F(EffectsTest, RapidParameterChanges) {
     }
     
     synthEngine->noteOff(60);
-    EXPECT_TRUE(true); // Should handle rapid changes
+    EXPECT_TRUE(true); 
 }
 
 // Test effects combinations
@@ -130,10 +137,10 @@ TEST_F(EffectsTest, EffectsCombinations) {
     synthEngine->setChorusRate(3.0f);
     synthEngine->setReverbParameter(0, 0.6f); // Room size
     
-    // Play and process
+    
     synthEngine->noteOn(60, 0.8f);
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     synthEngine->noteOff(60);
     
-    EXPECT_TRUE(true); // Should handle multiple effects
+    EXPECT_TRUE(true); 
 }

@@ -5,6 +5,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+//enum class to handle conversion to C compatible types for FFI
 enum class WaveformType {
     SINE = 0,
     SQUARE = 1,

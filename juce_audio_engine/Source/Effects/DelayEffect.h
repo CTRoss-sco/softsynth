@@ -2,6 +2,10 @@
 #include "Effect.h"
 #include <vector>
 
+
+/*
+Header file for the DelayEffect class.
+*/
 class DelayEffect : public Effect {
 private:
     std::vector<float> delayBuffer;

@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+/*
+AuthService class used for handling user account
+authentication.
+*/
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -7,7 +11,7 @@ class AuthService {
   //getter for current user
   static User? get currentUser => _auth.currentUser;
 
-  //check to see if user is signed in
+  //checks to see if user is signed in
   static bool get isSignedIn => currentUser != null;
 
   //authentication state change stream

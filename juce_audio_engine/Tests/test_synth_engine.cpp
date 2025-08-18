@@ -3,6 +3,11 @@
 #include <thread>
 #include <chrono>
 
+/*
+File containing unit tests for the main
+SynthEngine class.
+*/
+
 class SynthEngineTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -25,7 +30,7 @@ TEST_F(SynthEngineTest, Construction) {
 TEST_F(SynthEngineTest, NoteOnOff) {
     synthEngine->noteOn(60, 0.8f);  // Middle C
     synthEngine->noteOff(60);
-    EXPECT_TRUE(true); // Should not crash
+    EXPECT_TRUE(true); 
 }
 
 // Test multiple notes
@@ -38,7 +43,7 @@ TEST_F(SynthEngineTest, MultipleNotes) {
     synthEngine->noteOff(64);
     synthEngine->noteOff(67);
     
-    EXPECT_TRUE(true); // Should handle multiple notes
+    EXPECT_TRUE(true); 
 }
 
 // Test oscillator settings with static_cast
@@ -107,10 +112,10 @@ TEST_F(SynthEngineTest, DelayParameters) {
 
 // Test rapid parameter changes
 TEST_F(SynthEngineTest, RapidParameterChanges) {
-    // Play a note
+    
     synthEngine->noteOn(60, 0.8f);
     
-    // Rapidly change parameters
+    
     for (int i = 0; i < 10; ++i) {
         synthEngine->setCutoff(500.0f + i * 100.0f);
         synthEngine->setResonance(0.1f + (i * 0.05f));
@@ -120,22 +125,22 @@ TEST_F(SynthEngineTest, RapidParameterChanges) {
     }
     
     synthEngine->noteOff(60);
-    EXPECT_TRUE(true); // Should handle rapid changes
+    EXPECT_TRUE(true); 
 }
 
 // Test basic audio processing
 TEST_F(SynthEngineTest, BasicAudioProcessing) {
-    // Test basic functionality without crashing
+    
     synthEngine->noteOn(60, 0.8f);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
     synthEngine->noteOff(60);
     
-    EXPECT_TRUE(true); // Should complete without errors
+    EXPECT_TRUE(true); 
 }
 
 // Test parameter bounds
 TEST_F(SynthEngineTest, ParameterBounds) {
-    // Test extreme values don't crash
+    
     synthEngine->setCutoff(-100.0f);  // Below minimum
     synthEngine->setCutoff(50000.0f); // Above maximum
     
@@ -145,5 +150,5 @@ TEST_F(SynthEngineTest, ParameterBounds) {
     synthEngine->setOscMix(-0.5f);     // Below 0
     synthEngine->setOscMix(1.5f);      // Above 1
     
-    EXPECT_TRUE(true); // Should handle extreme values gracefully
+    EXPECT_TRUE(true); 
 }

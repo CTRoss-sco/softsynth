@@ -2,6 +2,10 @@
 #include "Effect.h"
 #include <vector>
 
+/*
+Header file for the ReverbEffect class.
+*/
+
 class ReverbEffect : public Effect {
 private:
     struct DelayLine {

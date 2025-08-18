@@ -241,9 +241,9 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
               unselectedLabelColor: Colors.grey[400],
             ),
           ),
-          // Tab Views
+          
           Expanded(
-            child: TabBarView(
+            child: TabBarView( //TabBarView with the three tabs as children.
               controller: _tabController,
               children: [
                 _buildOsc1Tab(),
@@ -257,6 +257,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
     );
   }
 
+  //Builds the main Oscillator 1 tab
   Widget _buildOsc1Tab() {
     return Padding(
       padding: const EdgeInsets.all(12), 
@@ -401,6 +402,7 @@ class _OscillatorControlsWidgetState extends State<OscillatorControlsWidget>
     );
   }
 
+  // Creates the mix tab within the oscillator controls
   Widget _buildMixTab() {
     return Padding(
       padding: const EdgeInsets.all(12), 

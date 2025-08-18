@@ -637,7 +637,7 @@ static double getChorusDryLevel() {
   return _getChorusDryLevel(_synthInstance);
 }
 
-  // Add these getters for OscillatorControls to access
+  
   static DynamicLibrary get library => _library;
   static Pointer<Void> get synthHandle => _synthInstance;
   static bool get isInitialized => _initialized;

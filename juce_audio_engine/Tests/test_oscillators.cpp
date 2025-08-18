@@ -3,6 +3,11 @@
 #include <thread>
 #include <chrono>
 
+/*
+File containing unit tests for oscillator functionality, 
+covering waveform selection, detuning and mixing settings.
+*/
+
 class OscillatorTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -47,7 +52,7 @@ TEST_F(OscillatorTest, WaveformSetting) {
 
 // Test detune functionality
 TEST_F(OscillatorTest, DetuneFunctionality) {
-    // Test various detune values
+    
     std::vector<float> detuneValues = {-50.0f, -25.0f, 0.0f, 25.0f, 50.0f};
     
     for (float detune : detuneValues) {
@@ -68,22 +73,22 @@ TEST_F(OscillatorTest, OscillatorMix) {
 
 // Test oscillator settings with notes
 TEST_F(OscillatorTest, OscillatorSettingsWithNotes) {
-    // Set oscillator configuration
+    
     synthEngine->setOsc1Waveform(static_cast<WaveformType>(0)); // Sine
     synthEngine->setOsc2Waveform(static_cast<WaveformType>(1)); // Square
     synthEngine->setDetune(25.0f);
     synthEngine->setOscMix(0.6f);
     
-    // Play note
+    
     synthEngine->noteOn(60, 0.8f);
     
-    // Brief pause
+    
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
     
-    // Stop note
+    
     synthEngine->noteOff(60);
     
-    // Verify settings remain
+    
     EXPECT_EQ(synthEngine->getOsc1Waveform(), static_cast<WaveformType>(0));
     EXPECT_EQ(synthEngine->getOsc2Waveform(), static_cast<WaveformType>(1));
     EXPECT_EQ(synthEngine->getDetune(), 25.0f);
@@ -102,29 +107,29 @@ TEST_F(OscillatorTest, RapidParameterChanges) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     
-    EXPECT_TRUE(true); // Should handle rapid changes
+    EXPECT_TRUE(true); 
 }
 
 // Test extreme parameter values
 TEST_F(OscillatorTest, ExtremeParameterValues) {
-    // Test extreme detune values
+    
     synthEngine->setDetune(-100.0f);
     synthEngine->setDetune(100.0f);
     
-    // Test extreme mix values
+    
     synthEngine->setOscMix(-0.5f); // Below 0
     synthEngine->setOscMix(1.5f);  // Above 1
     
-    // Test invalid waveform values (should be handled gracefully)
+    // Test invalid waveform values
     synthEngine->setOsc1Waveform(static_cast<WaveformType>(-1));
     synthEngine->setOsc1Waveform(static_cast<WaveformType>(10));
     
-    EXPECT_TRUE(true); // Should handle extreme values gracefully
+    EXPECT_TRUE(true); 
 }
 
 // Test waveform cycling
 TEST_F(OscillatorTest, WaveformCycling) {
-    // Test cycling through all waveforms multiple times
+    
     for (int cycle = 0; cycle < 3; ++cycle) {
         for (int waveform = 0; waveform < 4; ++waveform) {
             synthEngine->setOsc1Waveform(static_cast<WaveformType>(waveform));
@@ -138,7 +143,7 @@ TEST_F(OscillatorTest, WaveformCycling) {
 
 // Test parameter combinations
 TEST_F(OscillatorTest, ParameterCombinations) {
-    // Test various combinations of parameters
+    
     std::vector<std::tuple<int, int, float, float>> combinations = {
         {0, 1, -25.0f, 0.3f},  // Sine + Square
         {1, 2, 0.0f, 0.5f},    // Square + Sawtooth
@@ -152,7 +157,7 @@ TEST_F(OscillatorTest, ParameterCombinations) {
         synthEngine->setDetune(detune);
         synthEngine->setOscMix(mix);
         
-        // Verify settings
+        
         EXPECT_EQ(synthEngine->getOsc1Waveform(), static_cast<WaveformType>(osc1));
         EXPECT_EQ(synthEngine->getOsc2Waveform(), static_cast<WaveformType>(osc2));
         EXPECT_EQ(synthEngine->getDetune(), detune);

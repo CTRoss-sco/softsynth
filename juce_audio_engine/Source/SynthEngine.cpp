@@ -17,7 +17,7 @@ the other effect and filter components.
 */
 SynthEngine::SynthEngine() 
     : cutoffFrequency(1000.0f),
-    currentSampleRate(44100.0),
+    currentSampleRate(44100.0), //44100kHz corresponds to CD quality audio
     globalOsc1Waveform(WaveformType::SINE),
     globalOsc2Waveform(WaveformType::SINE),
     globalDetune(0.0f),
@@ -404,7 +404,7 @@ enabled at any one time.
 void SynthEngine::rebuildEffectsChain() {
     effectsChain.clear();
     
-    // Effects chain is built in professional order:
+    // Effects chain is built in the following order:
     // 1. Modulation effects (chorus) 
     // 2. Time-based effects (delay)   
     // 3. Spatial effects (reverb) 

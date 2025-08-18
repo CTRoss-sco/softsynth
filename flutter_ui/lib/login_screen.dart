@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../firebase/auth_service.dart';
 
+/*
+Class to handle the login screen UI for the
+application.
+*/
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -341,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black,
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

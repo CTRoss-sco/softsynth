@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'synth_engine.dart';
 
+/*
+Class to handle the oscilloscope UI controls, as
+well as managing the display returned from the synthengine.
+*/
+
 class OscilloscopeControls extends StatefulWidget {
   @override
   _OscilloscopeControlsState createState() => _OscilloscopeControlsState();

@@ -11,6 +11,12 @@ import 'firestore/preset_service.dart';
 import 'firestore/preset_model.dart';
 import 'consent_screen.dart';
 
+/*
+Main file that initialises the Flutter application,
+handles user authentication, and contains the logic for
+capturing user input through the on-screen keyboard.
+*/
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -296,10 +302,10 @@ class _SynthMainScreenState extends State<SynthMainScreen> {
               scale: scale,
               child: Column(
           children: [
-            // Top section - 3-column synthesizer layout
+            // Top section - 3-column layout
             if (synthInitialized)
               Expanded(
-                flex: 3, // Takes up most of the screen
+                flex: 3, 
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
@@ -695,7 +701,7 @@ class _PianoKeyboardState extends State<PianoKeyboard> {
   }
 
   void _updateStartingNote() {
-    _startingNote = widget.baseOctave * 12; // Dynamic based on current octave
+    _startingNote = widget.baseOctave * 12; 
   }
 
   String _midiNoteToName(int midiNote) {
@@ -726,6 +732,7 @@ class _PianoKeyboardState extends State<PianoKeyboard> {
     );
   }
   
+  //Widget to build the white keys of the on-screen keyboard
   Widget _buildWhiteKeys() {
     return Row(
       children: List.generate(_numberOfWhiteKeys, (index) {
@@ -776,6 +783,7 @@ class _PianoKeyboardState extends State<PianoKeyboard> {
     );
   }
   
+  //Widget to build the black keys of the on-screen keyboard
   Widget _buildBlackKeys() {
     final keyboardWidth = MediaQuery.of(context).size.width - 16; // Account for horizontal padding
     final whiteKeyWidth = keyboardWidth / _numberOfWhiteKeys;

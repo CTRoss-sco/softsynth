@@ -1,6 +1,6 @@
 # Flutter JUCE Synthesizer
 
-A cross-platform synthesizer application built with Flutter UI and JUCE/C++ audio processing, connected via a FFI bridge.
+A synthesizer application built with Flutter UI and JUCE/C++ audio processing, connected via a FFI bridge.
 
 ## Architecture
 

@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+Header file for the base Effect class.
+*/
 class Effect {
 public:
     Effect() = default;

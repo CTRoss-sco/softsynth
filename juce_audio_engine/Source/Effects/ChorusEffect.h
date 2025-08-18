@@ -3,6 +3,9 @@
 #include <vector>
 #include <cmath>
 
+/*
+Header file for the ChorusEffect class.
+*/
 class ChorusEffect : public Effect {
 private:
     struct ChorusVoice {

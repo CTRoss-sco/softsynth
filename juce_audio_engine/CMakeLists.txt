@@ -81,7 +81,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         tests/test_synth_engine.cpp
         tests/test_oscillators.cpp
         tests/test_effects.cpp
-        # tests/test_filter.cpp
     )
     
     # Link Google Test and SynthEngine library
@@ -108,7 +107,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Set C++ standard for tests
     target_compile_features(SynthEngineTests PRIVATE cxx_std_17)
     
-    # Same compile definitions as main library
+    
     target_compile_definitions(SynthEngineTests PRIVATE
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0

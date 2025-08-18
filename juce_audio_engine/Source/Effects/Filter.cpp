@@ -3,12 +3,15 @@
 #include <cmath>
 #include <memory>
 
-//LowpassFilter Implementation
+/*
+A class to represent a lowpass filter.
+*/
 
 LowpassFilter::LowpassFilter() 
     : cutoff(1000.0f), resonance(1.0f), z1(0.0f), z2(0.0f), sampleRate(44100.0) {
 }
 
+//simple filter setters
 void LowpassFilter::setCutoff(float freq) {
     cutoff = std::clamp(freq, 20.0f, 20000.0f);
 }
@@ -27,16 +30,16 @@ void LowpassFilter::reset() {
 }
 
 float LowpassFilter::processSample(float sample) {
-    // Simple 2-pole lowpass filter 
+    
     float nyquist = sampleRate / 2.0f;
     float normalizedCutoff = cutoff / nyquist;
     
-    // Clamp to prevent instability
+    
     normalizedCutoff = std::clamp(normalizedCutoff, 0.001f, 0.99f);
     
-    // Simple filter calculation
+    
     float alpha = normalizedCutoff;
-    float feedback = resonance * 0.1f;
+    float feedback = resonance * 0.1f; //resonance limiter to reduce harsh volumes
     
     // Apply filter
     z1 = z1 + alpha * (sample - z1 + feedback * (z1 - z2));
@@ -45,6 +48,7 @@ float LowpassFilter::processSample(float sample) {
     return z2;
 }
 
+//simple filter getters
 float LowpassFilter::getCutoff() const {
     return cutoff;
 }

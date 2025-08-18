@@ -1,5 +1,9 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 
+/*
+Class to store Firebase API specific information.
+*/
+
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     return FirebaseOptions(

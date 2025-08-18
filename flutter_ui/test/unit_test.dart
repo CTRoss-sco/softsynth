@@ -2,6 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'dart:math' as math;
 import 'mock_classes.dart';
 
+/*
+File containing unit tests focusing on keyboard
+mapping and midi functionality.
+*/
+
 void main() {
   group('MIDI Mathematical Functions', () {
     test('MIDI note to frequency conversion should be accurate', () {

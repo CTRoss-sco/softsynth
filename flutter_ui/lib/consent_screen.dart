@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 
+/*
+File and class to display consent information
+for user testing purposes.
+*/
+
 class ConsentScreen extends StatefulWidget {
   const ConsentScreen({super.key});
 

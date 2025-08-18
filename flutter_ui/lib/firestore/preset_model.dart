@@ -86,7 +86,7 @@ class PresetModel {
     'resonance': resonance,
   };
 
-  if (reverbEnabled) {
+  if (reverbEnabled) { //conditional check: if not enabled, then skipped
     json.addAll({
       'reverbEnabled': reverbEnabled,
       'reverbRoomSize': reverbRoomSize,
@@ -98,7 +98,7 @@ class PresetModel {
     json['reverbEnabled'] = false; 
   }
 
-  if (delayEnabled) {
+  if (delayEnabled) { //conditional check: if not enabled, then skipped
     json.addAll({
       'delayEnabled': delayEnabled,
       'delayTime': delayTime,
@@ -110,7 +110,7 @@ class PresetModel {
     json['delayEnabled'] = false; 
   }
 
-  if (chorusEnabled) {
+  if (chorusEnabled) { //conditional check: if not enabled, then skipped
     json.addAll({
       'chorusEnabled': chorusEnabled,
       'chorusRate': chorusRate,

@@ -1,9 +1,13 @@
-// flutter_ui/lib/services/preset_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase/auth_service.dart';
 import '../firestore/preset_model.dart';
 import '../oscillator_controls.dart';
 import '../synth_engine.dart';
+
+/*
+Class to handle preset management, covering saving
+and loading presets.
+*/
 
 class PresetService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;

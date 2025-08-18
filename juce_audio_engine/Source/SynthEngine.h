@@ -22,6 +22,9 @@
     #define SYNTH_API
 #endif
 
+/*
+Header file for the main SynthEngine class.
+*/
 class SYNTH_API SynthEngine : public juce::AudioSource {
 public:
     SynthEngine();

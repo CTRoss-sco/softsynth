@@ -145,6 +145,7 @@ bool ChorusEffect::isActive() const {
     return enabled;
 }
 
+//setter methods for chorus parameters
 void ChorusEffect::setRate(float rateHz) {
     rate = std::clamp(rateHz, 0.1f, 5.0f);
 }

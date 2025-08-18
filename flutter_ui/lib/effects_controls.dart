@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'synth_engine.dart';
 
+/*
+Class to handle the UI implementation of the 
+effects rack on screen.
+*/
 
 class EffectsControls extends StatefulWidget {
 
@@ -112,9 +116,9 @@ class _EffectsControlsState extends State<EffectsControls>
             indicatorWeight: 3,
           ),
           
-          // Effects content
+          
           Expanded(
-            child: TabBarView(
+            child: TabBarView( //Effect TabBarView covering the 4 main children tabs
               controller: _tabController,
               children: [
                 _buildFilterTab(),
@@ -129,6 +133,7 @@ class _EffectsControlsState extends State<EffectsControls>
     );
   }
 
+  //Widget to build the filter effect tab
   Widget _buildFilterTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -209,6 +214,7 @@ class _EffectsControlsState extends State<EffectsControls>
     );
   }
 
+  //Widget to build the reverb effect tab
   Widget _buildReverbTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -254,7 +260,7 @@ class _EffectsControlsState extends State<EffectsControls>
           
           const SizedBox(height: 20),
           
-          // Only show controls if effects engine is initialized
+          // Only show controls if synthengine is initialized
           if (SynthEngine.isInitialized) ...[
             // Room Size slider
             _buildCompactSlider(
@@ -369,6 +375,7 @@ class _EffectsControlsState extends State<EffectsControls>
     );
   }
 
+  //Widget to build the delay effect tab
   Widget _buildDelayTab() {
   return SingleChildScrollView(
     padding: const EdgeInsets.all(16.0),
@@ -414,7 +421,7 @@ class _EffectsControlsState extends State<EffectsControls>
         
         const SizedBox(height: 20),
         
-        // Only show controls if effects engine is initialized
+        // Only show controls if synthengine is initialized
         if (SynthEngine.isInitialized) ...[
           // Delay Time slider
           _buildCompactSlider(
@@ -529,6 +536,7 @@ class _EffectsControlsState extends State<EffectsControls>
   );
 }
 
+//Widget to build the chorus effect tab 
 Widget _buildChorusTab() {
   return SingleChildScrollView(
     padding: const EdgeInsets.all(12.0),
@@ -652,7 +660,7 @@ Widget _buildChorusTab() {
           
           const SizedBox(height: 16),
           
-          // Combined Wet/Dry Row (saves significant space)
+          // Combined Wet/Dry Row
           Row(
             children: [
               // Wet Level (left side)
